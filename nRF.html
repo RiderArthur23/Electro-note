@@ -50,10 +50,11 @@
     .topic-link.active {
       color: #3b7cae;
       background: #eff6fb;
+      border-color: #3b7cae;
       font-weight: 700;
     }
 
-    .topic-link.active::before {
+    .topic-link.block.active::before {
       content: '';
       position: absolute;
       left: 0;
@@ -83,10 +84,6 @@
     <div class="flex h-full flex-col">
       <div class="mb-8">
         <p class="text-xs font-bold uppercase tracking-[0.2em] text-gray-500">Sommaire</p>
-        <div class="mt-4 h-1.5 overflow-hidden rounded-full bg-gray-200" aria-hidden="true">
-          <div id="reading-progress" class="h-full w-0 rounded-full bg-primary transition-[width] duration-150"></div>
-        </div>
-        <p class="mt-2 text-xs text-gray-500"><span id="reading-progress-label">0</span> % parcouru</p>
       </div>
 
       <nav class="space-y-1" aria-label="Topics nRF">
@@ -115,21 +112,12 @@
   </aside>
 
   <div class="sticky top-20 z-30 border-b bg-white px-4 py-3 shadow-sm md:hidden">
-    <div class="mb-2 flex items-center justify-between text-xs font-semibold text-gray-500">
-      <span>Navigation</span>
-      <span><span id="mobile-reading-progress-label">0</span> %</span>
-    </div>
-    <div class="mb-3 h-1.5 overflow-hidden rounded-full bg-gray-200" aria-hidden="true">
-      <div id="mobile-reading-progress" class="h-full w-0 rounded-full bg-primary transition-[width] duration-150"></div>
-    </div>
     <nav class="flex gap-2 overflow-x-auto pb-1" aria-label="Navigation mobile des topics nRF">
-      <a href="#introduction" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Introduction</a>
-      <a href="#etape-1" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Installation</a>
-      <a href="#etape-2" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">LED</a>
-      <a href="#etape-3" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Bluetooth</a>
-      <a href="#ble-gatt" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">GATT</a>
-      <a href="#ble-energy" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Énergie BLE</a>
-      <a href="#etape-4" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">I2C</a>
+      <a href="#introduction" data-section="introduction" class="topic-link active whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Introduction</a>
+      <a href="#etape-1" data-section="etape-1" class="topic-link whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Installation</a>
+      <a href="#etape-2" data-section="etape-2" class="topic-link whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">LED</a>
+      <a href="#etape-3" data-section="etape-3" class="topic-link whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Bluetooth</a>
+      <a href="#etape-4" data-section="etape-4" class="topic-link whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">I2C</a>
     </nav>
   </div>
 
@@ -993,20 +981,6 @@ CONFIG_BT_GATT_DYNAMIC_DB=n
   <script>
     const sections = [...document.querySelectorAll('main section[id]')];
     const topicLinks = [...document.querySelectorAll('.topic-link')];
-    const progressBars = [document.querySelector('#reading-progress'), document.querySelector('#mobile-reading-progress')];
-    const progressLabels = [document.querySelector('#reading-progress-label'), document.querySelector('#mobile-reading-progress-label')];
-
-    function updateReadingProgress() {
-      const pageHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = pageHeight > 0 ? Math.min(100, Math.round((window.scrollY / pageHeight) * 100)) : 0;
-
-      progressBars.forEach((bar) => {
-        if (bar) bar.style.width = `${progress}%`;
-      });
-      progressLabels.forEach((label) => {
-        if (label) label.textContent = progress;
-      });
-    }
 
     const sectionObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -1016,8 +990,6 @@ CONFIG_BT_GATT_DYNAMIC_DB=n
     }, { rootMargin: '-20% 0px -65% 0px' });
 
     sections.forEach((section) => sectionObserver.observe(section));
-    window.addEventListener('scroll', updateReadingProgress, { passive: true });
-    updateReadingProgress();
   </script>
 </body>
 </html>

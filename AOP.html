@@ -17,10 +17,12 @@
     tailwind.config = {
       theme: {
         extend: {
-          primary: '#3b7cae',
-          secondary: '#3b7cae',
-          bgPrimary: '#ffffff',
-          bgSecondary: '#f3f4f6',
+          colors: {
+            primary: '#3b7cae',
+            secondary: '#3b7cae',
+            bgPrimary: '#ffffff',
+            bgSecondary: '#f3f4f6',
+          },
         },
       },
     };
@@ -39,10 +41,11 @@
     .topic-link.active {
       color: #3b7cae;
       background: #eff6fb;
+      border-color: #3b7cae;
       font-weight: 700;
     }
 
-    .topic-link.active::before {
+    .topic-link.block.active::before {
       content: '';
       position: absolute;
       left: 0;
@@ -72,10 +75,6 @@
     <div class="flex h-full flex-col">
       <div class="mb-8">
         <p class="text-xs font-bold uppercase tracking-[0.2em] text-gray-500">Sommaire</p>
-        <div class="mt-4 h-1.5 overflow-hidden rounded-full bg-gray-200" aria-hidden="true">
-          <div id="reading-progress" class="h-full w-0 rounded-full bg-primary transition-[width] duration-150"></div>
-        </div>
-        <p class="mt-2 text-xs text-gray-500"><span id="reading-progress-label">0</span> % parcouru</p>
       </div>
 
       <nav class="space-y-1" aria-label="Topics nRF">
@@ -95,22 +94,16 @@
   </aside>
 
   <div class="sticky top-20 z-30 border-b bg-white px-4 py-3 shadow-sm md:hidden">
-    <div class="mb-2 flex items-center justify-between text-xs font-semibold text-gray-500">
-      <span>Navigation</span>
-      <span><span id="mobile-reading-progress-label">0</span> %</span>
-    </div>
-    <div class="mb-3 h-1.5 overflow-hidden rounded-full bg-gray-200" aria-hidden="true">
-      <div id="mobile-reading-progress" class="h-full w-0 rounded-full bg-primary transition-[width] duration-150"></div>
-    </div>
     <nav class="flex gap-2 overflow-x-auto pb-1" aria-label="Navigation mobile des topics nRF">
-      <a href="#introduction" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Introduction</a>
-      <a href="#suiveur" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Suiveur</a>
-      <a href="#inverseur" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Inverseur</a>
-      <a href="#non-inverseur" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Non inverseur</a>
-      <a href="#additionneur" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Additionneur</a>
-      <a href="#soustracteur" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Soustracteur</a>
-      <a href="#comparateur-simple" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Comparateur</a>
-      <a href="#photodiode" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Photodiode</a>
+      <a href="#introduction" data-section="introduction" class="topic-link active whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Introduction</a>
+      <a href="#suiveur" data-section="suiveur" class="topic-link whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Suiveur</a>
+      <a href="#inverseur" data-section="inverseur" class="topic-link whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Inverseur</a>
+      <a href="#non-inverseur" data-section="non-inverseur" class="topic-link whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Non inverseur</a>
+      <a href="#additionneur" data-section="additionneur" class="topic-link whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Additionneur</a>
+      <a href="#soustracteur" data-section="soustracteur" class="topic-link whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Soustracteur</a>
+      <a href="#comparateur-simple" data-section="comparateur-simple" class="topic-link whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Comparateur</a>
+      <a href="#comparateur-hysteresis" data-section="comparateur-hysteresis" class="topic-link whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Hystérésis</a>
+      <a href="#photodiode" data-section="photodiode" class="topic-link whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Photodiode</a>
     </nav>
   </div>
 
@@ -550,8 +543,8 @@
                   <span class="border-b border-gray-800 px-1 pb-1">R</span>
                   <span class="px-1 pt-1">R<sub>1</sub></span>
                 </span>
-                (Si on supprime V2)
                 &times; V<sub>1</sub>
+                (Si on supprime V2)
               </p>
               <p>
                 V<sub>s2</sub> = -
@@ -1330,20 +1323,6 @@
   <script>
     const sections = [...document.querySelectorAll('main section[id]')];
     const topicLinks = [...document.querySelectorAll('.topic-link')];
-    const progressBars = [document.querySelector('#reading-progress'), document.querySelector('#mobile-reading-progress')];
-    const progressLabels = [document.querySelector('#reading-progress-label'), document.querySelector('#mobile-reading-progress-label')];
-
-    function updateReadingProgress() {
-      const pageHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = pageHeight > 0 ? Math.min(100, Math.round((window.scrollY / pageHeight) * 100)) : 0;
-
-      progressBars.forEach((bar) => {
-        if (bar) bar.style.width = `${progress}%`;
-      });
-      progressLabels.forEach((label) => {
-        if (label) label.textContent = progress;
-      });
-    }
 
     const sectionObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -1353,8 +1332,6 @@
     }, { rootMargin: '-20% 0px -65% 0px' });
 
     sections.forEach((section) => sectionObserver.observe(section));
-    window.addEventListener('scroll', updateReadingProgress, { passive: true });
-    updateReadingProgress();
   </script>
 </body>
 </html>
