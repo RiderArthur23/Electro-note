@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deratnet</title>
+
+  <!-- Scroll fluide -->
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3b7cae',
+            secondary: '#3b7cae',
+            thirdary: '#FCAD57',
+            fourthary: '#B05332',
+            fifthary: '#CC6088',
+            bgPrimary: '#ffffff',
+            bgSecondary: '#f3f4f6',
+          },
+        },
+      },
+    };
+  </script>
+</head>
+
+<body class="bg-bgPrimary text-gray-900">
+
+  <!-- HEADER -->
+  <header
+    id="header"
+    class="fixed top-0 left-0 w-full z-[10000] bg-bgPrimary border-b shadow-sm transition-transform duration-300 ease-in-out"
+  >
+    <div class="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+      <!-- Logo et nom du site -->
+      <a href="#" class="flex items-center gap-3">
+        <img
+          src="./ressources/Index/Logo_ElectroSite.png"
+          alt="Logo de l'entreprise"
+          class="h-12 w-auto"
+        />
+        <span class="text-xl font-bold text-[#3b7cae]">Electro-note</span>
+      </a>
+
+      <!-- Navigation desktop -->
+      <nav class="hidden lg:flex items-center justify-center gap-6 text-center">
+        <a href="#" class="rounded-full border border-[#3b7cae] px-4 py-2 text-lg font-semibold text-[#3b7cae] shadow-sm transition hover:bg-[#3b7cae] hover:text-white">Accueil</a>
+        <a href="#Sujets" class="rounded-full border border-[#3b7cae] px-4 py-2 text-lg font-semibold text-[#3b7cae] shadow-sm transition hover:bg-[#3b7cae] hover:text-white">Sujets</a>
+        <a href="#ProjetsEnCours" class="rounded-full border border-[#3b7cae] px-4 py-2 text-lg font-semibold text-[#3b7cae] shadow-sm transition hover:bg-[#3b7cae] hover:text-white">Projets en cours</a>
+        <a href="#ProjetsAFaire" class="rounded-full border border-[#3b7cae] px-4 py-2 text-lg font-semibold text-[#3b7cae] shadow-sm transition hover:bg-[#3b7cae] hover:text-white">Projets à faire</a>
+        <a href="#ProjetsFinis" class="rounded-full border border-[#3b7cae] px-4 py-2 text-lg font-semibold text-[#3b7cae] shadow-sm transition hover:bg-[#3b7cae] hover:text-white">Projets terminés</a>
+      </nav>
+
+      <!-- Menu burger mobile -->
+      <button 
+        id="mobile-menu-btn"
+        class="lg:hidden rounded-full border border-[#3b7cae] p-2 text-[#3b7cae] hover:bg-[#3b7cae] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#3b7cae]"
+        aria-label="Ouvrir le menu"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Menu mobile -->
+    <div id="mobile-menu" class="lg:hidden hidden w-full bg-bgPrimary border-t shadow-lg">
+      <div class="px-4 pt-2 pb-4 space-y-2 text-center">
+        <a href="#ProjetsFinis" class="block rounded-full border border-[#3b7cae] px-3 py-2 text-lg font-semibold text-[#3b7cae] shadow-sm transition hover:bg-[#3b7cae] hover:text-white">Projets terminés</a>
+        <a href="#ProjetsAFaire" class="block rounded-full border border-[#3b7cae] px-3 py-2 text-lg font-semibold text-[#3b7cae] shadow-sm transition hover:bg-[#3b7cae] hover:text-white">Projets à faire</a>
+        <a href="#ProjetsEnCours" class="block rounded-full border border-[#3b7cae] px-3 py-2 text-lg font-semibold text-[#3b7cae] shadow-sm transition hover:bg-[#3b7cae] hover:text-white">Projets en cours</a>
+        <a href="#Sujets" class="block rounded-full border border-[#3b7cae] px-3 py-2 text-lg font-semibold text-[#3b7cae] shadow-sm transition hover:bg-[#3b7cae] hover:text-white">Sujets</a>
+        <a href="#" class="block rounded-full border border-[#3b7cae] px-3 py-2 text-lg font-semibold text-[#3b7cae] shadow-sm transition hover:bg-[#3b7cae] hover:text-white">Accueil</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HEADER SCRIPT -->
+  <script>
+    // Menu mobile
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Header scroll effect
+    const header = document.getElementById("header");
+    let lastScroll = 0;
+
+    window.addEventListener("scroll", () => {
+      const currentScroll = window.scrollY;
+
+      if (currentScroll > lastScroll && currentScroll > 80) {
+        header.classList.add("-translate-y-full");
+      } else {
+        header.classList.remove("-translate-y-full");
+      }
+
+      lastScroll = currentScroll;
+    });
+  </script>
+
+  
+  <!-- HERO -->
+  <section class="pt-24 pb-20 bg-white px-4 lg:px-8">
+    <div class="max-w-6xl mx-auto">
+      <div class="relative h-[70vh] lg:h-[80vh] bg-[url('./ressources/index/BackGroundElec.jpg')] bg-cover bg-center rounded-3xl overflow-hidden shadow-2xl">
+        <div class="absolute inset-0 bg-black/60 lg:bg-black/50"></div>
+
+        <div class="relative h-full flex items-center justify-center px-4">
+          <div class="text-center text-white max-w-4xl mx-auto flex flex-col items-center">
+            <h1 class="text-3xl sm:text-4xl lg:text-6xl font-bold mb-8 leading-tight drop-shadow-lg">
+              Carnet de note sur l'électronique
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="Sujets" class="bg-bgPrimary py-16 md:py-20">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+
+    <!-- Titre -->
+    <div class="text-center mb-12">
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-primary">
+        Tous les sujets
+      </h1>
+      <p class="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto">
+        -----
+      </p>
+    </div>
+
+    <!-- Grille -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
+
+      <!-- Carte 1 -->
+      <article class="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+        <img
+          src="./ressources/index/PCB_DIY_Card.png"
+          alt="Illustration de détection"
+          class="w-full h-52 object-cover"
+        >
+        <div class="p-6 flex flex-col flex-grow">
+      
+          <h3 class="text-xl font-bold mb-3 text-primary">
+            PCB DIY
+          </h3>
+          <p class="text-gray-600 mb-6 leading-relaxed flex-grow">
+            Comment fabriquer des circuits imprimés à la maison à l'aide d'une méthode simple et peu couteuse.
+          </p>
+
+          <a href="PCB_DIY.html" class="inline-flex items-center gap-2 text-primary font-semibold group-hover:gap-3 transition-all">
+            Ouvrir
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- Carte 2 -->
+      <article class="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+        <img
+          src="./ressources/index/PowerLatch_Card3.png"
+          alt="Illustration de détection"
+          class="w-full h-52 object-cover"
+        >
+        <div class="p-6 flex flex-col flex-grow">
+      
+          <h3 class="text-xl font-bold mb-3 text-primary">
+            Power Latch
+          </h3>
+          <p class="text-gray-600 mb-6 leading-relaxed flex-grow">
+            Comment couper l'alimentation d'une carte électronique à l'aide d'un bouton poussoir.
+          </p>
+
+          <a href="PowerLatch.html" class="inline-flex items-center gap-2 text-primary font-semibold group-hover:gap-3 transition-all">
+            Ouvrir
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- Carte 3 -->
+      <article class="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+        <img
+          src="./ressources/index/AOP_Card2.jpg"
+          alt="Illustration de détection"
+          class="w-full h-52 object-cover"
+        >
+        <div class="p-6 flex flex-col flex-grow">
+      
+          <h3 class="text-xl font-bold mb-3 text-primary">
+            Amplificateur opérationel
+          </h3>
+
+          <p class="text-gray-600 mb-6 leading-relaxed flex-grow">
+            Tout savoir sur les amplificateurs opérationnels, leur fonctionnement et leurs applications.
+          </p>
+
+          <a href="AOP.html" class="inline-flex items-center gap-2 text-primary font-semibold group-hover:gap-3 transition-all">
+            Ouvrir
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- Carte 4 -->
+      <article class="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+        <img
+          src="./ressources/index/STM32_Card.png"
+          alt="Illustration de détection"
+          class="w-full h-52 object-cover"
+        >
+        <div class="p-6 flex flex-col flex-grow">
+      
+          <h3 class="text-xl font-bold mb-3 text-primary">
+            STM32
+          </h3>
+
+          <p class="text-gray-600 mb-6 leading-relaxed flex-grow">
+            Tout savoir sur les microcontrôleurs STM32, leur fonctionnement et leurs applications.
+          </p>
+
+          <a href="#detection" class="inline-flex items-center gap-2 text-primary font-semibold group-hover:gap-3 transition-all">
+            Ouvrir
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- Carte 5 -->
+      <article class="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+        <img
+          src="./ressources/index/ESP32_Card2.jpg"
+          alt="Illustration de détection"
+          class="w-full h-52 object-cover"
+        >
+        <div class="p-6 flex flex-col flex-grow">
+      
+          <h3 class="text-xl font-bold mb-3 text-primary">
+            ESP32
+          </h3>
+
+          <p class="text-gray-600 mb-6 leading-relaxed flex-grow">
+            Tout savoir sur les microcontrôleurs ESP32, leur fonctionnement et leurs applications.
+          </p>
+          
+          <a href="#detection" class="inline-flex items-center gap-2 text-primary font-semibold group-hover:gap-3 transition-all">
+            Ouvrir
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- Carte 6 -->
+      <article class="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+        <img
+          src="./ressources/index/SystemeOnBattery_Card2.jpg"
+          alt="Illustration de détection"
+          class="w-full h-52 object-cover"
+        >
+        <div class="p-6 flex flex-col flex-grow">
+      
+          <h3 class="text-xl font-bold mb-3 text-primary">
+            Projets sur batteries
+          </h3>
+
+          <p class="text-gray-600 mb-6 leading-relaxed flex-grow">
+            Comment alimenter vos projets électroniques avec des batteries.
+          </p>
+
+          <a href="#detection" class="inline-flex items-center gap-2 text-primary font-semibold group-hover:gap-3 transition-all">
+            Ouvrir
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- Carte 7 -->
+      <article class="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+        <img
+          src="./ressources/index/Hyperfrequence_Card.png"
+          alt="Illustration de détection"
+          class="w-full h-52 object-cover"
+        >
+        <div class="p-6 flex flex-col flex-grow">
+      
+          <h3 class="text-xl font-bold mb-3 text-primary">
+            Hyperfréquence
+          </h3>
+
+          <p class="text-gray-600 mb-6 leading-relaxed flex-grow">
+            Comprendre l'importance de gérer correctement les hautes fréquences dans les systèmes électroniques
+          </p>
+
+          <a href="#detection" class="inline-flex items-center gap-2 text-primary font-semibold group-hover:gap-3 transition-all">
+            Ouvrir
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- Carte 8 -->
+      <article class="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+        <img
+          src="./ressources/index/Mosfet_Card2.png"
+          alt="Illustration de détection"
+          class="w-full h-52 object-cover"
+        >
+        <div class="p-6 flex flex-col flex-grow">
+      
+          <h3 class="text-xl font-bold mb-3 text-primary">
+            Mosfets et transistors
+          </h3>
+
+          <p class="text-gray-600 mb-6 leading-relaxed flex-grow">
+            Comprendre le fonctionnement et l'utilisation des mosfets et transistors dans les circuits électroniques.
+          </p>
+
+          <a href="#detection" class="inline-flex items-center gap-2 text-primary font-semibold group-hover:gap-3 transition-all">
+            Ouvrir
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- Carte 9 -->
+      <article class="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+        <img
+          src="./ressources/index/RécupérationEnergie_Card2.png"
+          alt="Illustration de détection"
+          class="w-full h-52 object-cover"
+        >
+        <div class="p-6 flex flex-col flex-grow">
+      
+          <h3 class="text-xl font-bold mb-3 text-primary">
+            Energy Harvesting
+          </h3>
+
+          <p class="text-gray-600 mb-6 leading-relaxed flex-grow">
+            Comment capturer une petite quantité d’énergie disponible dans l’environnement et la convertir en une forme exploitable (Mouvement, solaire, température, ...).
+          </p>
+
+          <a href="#detection" class="inline-flex items-center gap-2 text-primary font-semibold group-hover:gap-3 transition-all">
+            Ouvrir
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- Carte 10 -->
+      <article class="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+        <img
+          src="./ressources/index/Nordic_nRF_Card.png"
+          alt="Illustration de détection"
+          class="w-full h-52 object-cover"
+        >
+        <div class="p-6 flex flex-col flex-grow">
+      
+          <h3 class="text-xl font-bold mb-3 text-primary">
+            Nordic nRF
+          </h3>
+
+          <p class="text-gray-600 mb-6 leading-relaxed flex-grow">
+            Comment programmer et utiliser un module (Anna B112 de ublox) incluant un microcontrôleur Nordic nRF pour des applications de communication sans fil et ultra basse consommation.
+          </p>
+
+          <a href="nRF.html" class="inline-flex items-center gap-2 text-primary font-semibold group-hover:gap-3 transition-all">
+            Ouvrir
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- Carte 11 -->
+      <article class="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+        <img
+          src="./ressources/index/FPGA_Card.jpg"
+          alt="Illustration de détection"
+          class="w-full h-52 object-cover"
+        >
+        <div class="p-6 flex flex-col flex-grow">
+      
+          <h3 class="text-xl font-bold mb-3 text-primary">
+            FPGA
+          </h3>
+
+          <p class="text-gray-600 mb-6 leading-relaxed flex-grow">
+            Comprendre et programmer un FPGA pour maitriser les microcontrôleurs à circuits logiques programmables.
+          </p>
+
+          <a href="FPGA.html" class="inline-flex items-center gap-2 text-primary font-semibold group-hover:gap-3 transition-all">
+            Ouvrir
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- Carte 12 -->
+      <article class="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+        <img
+          src="./ressources/index/ROS_Card.jpg"
+          alt="Illustration de détection"
+          class="w-full h-52 object-cover"
+        >
+        <div class="p-6 flex flex-col flex-grow">
+      
+          <h3 class="text-xl font-bold mb-3 text-primary">
+            Robotic Operating System
+          </h3>
+
+          <p class="text-gray-600 mb-6 leading-relaxed flex-grow">
+            Comment mettre en application des robots à l'aide du système d'exploitation ROS (Robotic Operating System).
+          </p>
+
+          <a href="ROS.html" class="inline-flex items-center gap-2 text-primary font-semibold group-hover:gap-3 transition-all">
+            Ouvrir
+            <span>→</span>
+          </a>
+        </div>
+      </article>
+
+
+    </div>
+  </div>
+</section>
+
+  <!-- Projets en cours -->
+<section id="ProjetsEnCours" class="bg-bgSecondary py-20 px-4">
+
+  <div class="max-w-6xl mx-auto">
+
+    <h2 class="text-center text-3xl lg:text-5xl font-bold mb-16">
+      Les projets en cours
+    </h2>
+    <!-- CARROUSEL -->
+    <div class="relative w-full overflow-hidden rounded-xl">
+      <div class="carousel-track flex transition-transform duration-500 ease-in-out w-full">
+
+        <!-- SLIDE -->
+        <div class="w-full flex-shrink-0 px-2">
+          <div class="flex flex-col lg:flex-row items-center bg-white border rounded-xl p-6 shadow-lg min-h-[320px] lg:min-h-[380px]">
+            <div class="w-full lg:w-1/2 h-52 sm:h-60 lg:h-64">
+              <img src="./ressources/index/Rat.jpg"
+              class="w-full h-full object-cover rounded-lg">
+            </div>
+            <div class="pt-4 lg:px-8 mt-4 lg:mt-0">
+              <h3 class="text-2xl lg:text-3xl font-bold text-primary mb-3">
+                Deratnet
+              </h3>
+              <p class="text-gray-600 mb-6 text-base lg:text-lg">
+                Services de dératisation pour un environnement sain et sécurisé.
+              </p>
+              <a href="https://www.deratnet.be"
+              class="text-primary text-lg font-bold hover:underline">
+                Aller vers le site →
+              </a>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- SLIDE -->
+        <div class="w-full flex-shrink-0 px-2">
+          <div class="flex flex-col lg:flex-row items-center bg-white border rounded-xl p-6 shadow-lg min-h-[320px] lg:min-h-[380px]">
+            <div class="w-full lg:w-1/2 h-52 sm:h-60 lg:h-64">
+              <img src="./ressources/Mazout/Acceuil.png"
+              class="w-full h-full object-cover rounded-lg">
+            </div>
+            <div class="pt-4 lg:px-8 mt-4 lg:mt-0">
+              <h3 class="text-2xl lg:text-3xl font-bold text-secondary mb-3">
+                Traitement des citernes à mazout
+              </h3>
+              <p class="text-gray-600 mb-6 text-base lg:text-lg">
+                Extraire ou condamner votre citerne à mazout ? 
+              </p>
+              <a href="Mazout.html"
+              class="text-secondary text-lg font-bold hover:underline">
+                Aller vers la page →
+              </a>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- BOUTONS -->
+      <button type="button" data-carousel-prev aria-label="Projet précédent"
+      class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black px-4 py-2 rounded-full text-white text-xl z-10">
+        ‹
+      </button>
+      <button type="button" data-carousel-next aria-label="Projet suivant"
+      class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black px-4 py-2 rounded-full text-white text-xl z-10">
+        ›
+      </button>
+    </div>
+  </div>
+</section>
+
+  <!-- Projets à faire -->
+<section id="ProjetsAFaire" class="bg-bgSecondary py-20 px-4">
+
+  <div class="max-w-6xl mx-auto">
+
+    <h2 class="text-center text-3xl lg:text-5xl font-bold mb-16">
+      Les projets à faire
+    </h2>
+    <!-- CARROUSEL -->
+    <div class="relative w-full overflow-hidden rounded-xl">
+      <div class="carousel-track flex transition-transform duration-500 ease-in-out w-full">
+
+        <!-- SLIDE -->
+        <div class="w-full flex-shrink-0 px-2">
+          <div class="flex flex-col lg:flex-row items-center bg-white border rounded-xl p-6 shadow-lg min-h-[320px] lg:min-h-[380px]">
+            <div class="w-full lg:w-1/2 h-52 sm:h-60 lg:h-64">
+              <img src="./ressources/index/Rat.jpg"
+              class="w-full h-full object-cover rounded-lg">
+            </div>
+            <div class="pt-4 lg:px-8 mt-4 lg:mt-0">
+              <h3 class="text-2xl lg:text-3xl font-bold text-primary mb-3">
+                Deratnet
+              </h3>
+              <p class="text-gray-600 mb-6 text-base lg:text-lg">
+                Services de dératisation pour un environnement sain et sécurisé.
+              </p>
+              <a href="https://www.deratnet.be"
+              class="text-primary text-lg font-bold hover:underline">
+                Aller vers le site →
+              </a>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- SLIDE -->
+        <div class="w-full flex-shrink-0 px-2">
+          <div class="flex flex-col lg:flex-row items-center bg-white border rounded-xl p-6 shadow-lg min-h-[320px] lg:min-h-[380px]">
+            <div class="w-full lg:w-1/2 h-52 sm:h-60 lg:h-64">
+              <img src="./ressources/Mazout/Acceuil.png"
+              class="w-full h-full object-cover rounded-lg">
+            </div>
+            <div class="pt-4 lg:px-8 mt-4 lg:mt-0">
+              <h3 class="text-2xl lg:text-3xl font-bold text-secondary mb-3">
+                Traitement des citernes à mazout
+              </h3>
+              <p class="text-gray-600 mb-6 text-base lg:text-lg">
+                Extraire ou condamner votre citerne à mazout ? 
+              </p>
+              <a href="Mazout.html"
+              class="text-secondary text-lg font-bold hover:underline">
+                Aller vers la page →
+              </a>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- BOUTONS -->
+      <button type="button" data-carousel-prev aria-label="Projet précédent"
+      class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black px-4 py-2 rounded-full text-white text-xl z-10">
+        ‹
+      </button>
+      <button type="button" data-carousel-next aria-label="Projet suivant"
+      class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black px-4 py-2 rounded-full text-white text-xl z-10">
+        ›
+      </button>
+    </div>
+  </div>
+</section>
+
+  <!-- Projets finis -->
+<section id="ProjetsFinis" class="bg-bgSecondary py-20 px-4">
+
+  <div class="max-w-6xl mx-auto">
+
+    <h2 class="text-center text-3xl lg:text-5xl font-bold mb-16">
+      Les projets finis
+    </h2>
+    <!-- CARROUSEL -->
+    <div class="relative w-full overflow-hidden rounded-xl">
+      <div class="carousel-track flex transition-transform duration-500 ease-in-out w-full">
+
+        <!-- SLIDE -->
+        <div class="w-full flex-shrink-0 px-2">
+          <div class="flex flex-col lg:flex-row items-center bg-white border rounded-xl p-6 shadow-lg min-h-[320px] lg:min-h-[380px]">
+            <div class="w-full lg:w-1/2 h-52 sm:h-60 lg:h-64">
+              <img src="./ressources/index/Rat.jpg"
+              class="w-full h-full object-cover rounded-lg">
+            </div>
+            <div class="pt-4 lg:px-8 mt-4 lg:mt-0">
+              <h3 class="text-2xl lg:text-3xl font-bold text-primary mb-3">
+                Deratnet
+              </h3>
+              <p class="text-gray-600 mb-6 text-base lg:text-lg">
+                Services de dératisation pour un environnement sain et sécurisé.
+              </p>
+              <a href="https://www.deratnet.be"
+              class="text-primary text-lg font-bold hover:underline">
+                Aller vers le site →
+              </a>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- SLIDE -->
+        <div class="w-full flex-shrink-0 px-2">
+          <div class="flex flex-col lg:flex-row items-center bg-white border rounded-xl p-6 shadow-lg min-h-[320px] lg:min-h-[380px]">
+            <div class="w-full lg:w-1/2 h-52 sm:h-60 lg:h-64">
+              <img src="./ressources/Mazout/Acceuil.png"
+              class="w-full h-full object-cover rounded-lg">
+            </div>
+            <div class="pt-4 lg:px-8 mt-4 lg:mt-0">
+              <h3 class="text-2xl lg:text-3xl font-bold text-secondary mb-3">
+                Traitement des citernes à mazout
+              </h3>
+              <p class="text-gray-600 mb-6 text-base lg:text-lg">
+                Extraire ou condamner votre citerne à mazout ? 
+              </p>
+              <a href="Mazout.html"
+              class="text-secondary text-lg font-bold hover:underline">
+                Aller vers la page →
+              </a>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- BOUTONS -->
+      <button type="button" data-carousel-prev aria-label="Projet précédent"
+      class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black px-4 py-2 rounded-full text-white text-xl z-10">
+        ‹
+      </button>
+      <button type="button" data-carousel-next aria-label="Projet suivant"
+      class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black px-4 py-2 rounded-full text-white text-xl z-10">
+        ›
+      </button>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- SCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("section[id^='Projets']").forEach(section => {
+    const track = section.querySelector(".carousel-track");
+    const slides = Array.from(track.children);
+    const previousButton = section.querySelector("[data-carousel-prev]");
+    const nextButton = section.querySelector("[data-carousel-next]");
+    let index = 0;
+    let startX = 0;
+    let autoSlideInterval;
+
+    const updateCarousel = () => {
+      track.style.transform = `translateX(-${index * 100}%)`;
+    };
+
+    const goToSlide = nextIndex => {
+      index = (nextIndex + slides.length) % slides.length;
+      updateCarousel();
+    };
+
+    const restartAutoSlide = () => {
+      clearInterval(autoSlideInterval);
+      autoSlideInterval = setInterval(() => goToSlide(index + 1), 5000);
+    };
+
+    const moveNext = () => {
+      goToSlide(index + 1);
+      restartAutoSlide();
+    };
+
+    const movePrevious = () => {
+      goToSlide(index - 1);
+      restartAutoSlide();
+    };
+
+    previousButton.addEventListener("click", movePrevious);
+    nextButton.addEventListener("click", moveNext);
+    track.addEventListener("touchstart", event => {
+      startX = event.touches[0].clientX;
+    }, { passive: true });
+    track.addEventListener("touchend", event => {
+      const distance = startX - event.changedTouches[0].clientX;
+      if (Math.abs(distance) > 50) {
+        distance > 0 ? moveNext() : movePrevious();
+      }
+    }, { passive: true });
+
+    updateCarousel();
+    restartAutoSlide();
+  });
+});
+</script>
+
+  <!-- FOOTER 
+  <footer id="footer" class="bg-white border-t py-12 px-4">
+    <div class="max-w-5xl mx-auto text-center">
+      <h3 class="text-3xl lg:text-4xl font-bold mb-8"></h3>
+      <p class="font-bold text-xl mb-2">Michel Wiame</p>
+      <p class="text-gray-600 mb-1">Tél : 0473 / 50.37.44</p>
+      <p class="text-gray-600 mb-8">Email : michel@michelwiame.be</p>
+
+      <div class="mb-8">
+        <h4 class="font-bold text-2xl mb-4">Trouvez-nous</h4>
+        <p class="text-lg text-gray-600">32 rue du Zemont, 5030 Gembloux</p>
+      </div>
+    </div>
+  </footer>
+  -->
+
+</body>
+</html>

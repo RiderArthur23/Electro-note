@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="fr" style="scroll-behavior: smooth;">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PCB DIY | Electro-note</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3b7cae',
+            secondary: '#3b7cae',
+            bgPrimary: '#ffffff',
+            bgSecondary: '#f3f4f6',
+          },
+        },
+      },
+    };
+  </script>
+</head>
+
+<body class="bg-bgPrimary text-gray-900">
+  <header class="fixed left-0 top-0 z-[10000] w-full border-b bg-white shadow-sm">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="./ressources/Index/Logo_ElectroSite.png" alt="Logo Electro-note" class="h-12 w-auto" />
+        <span class="text-xl font-bold text-primary">Electro-note</span>
+      </a>
+      <a href="index.html#Sujets" class="rounded-full border border-primary px-4 py-2 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">
+        Tous les sujets
+      </a>
+    </div>
+  </header>
+
+  <main class="pt-24">
+    <section class="bg-bgSecondary px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl text-center">
+        <h1 class="text-4xl font-bold leading-tight text-primary sm:text-5xl lg:text-6xl">PCB DIY</h1>
+      </div>
+    </section>
+
+    <section id="introduction" class="bg-white px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="mb-10 text-center text-3xl font-bold text-primary sm:text-4xl md:text-left">Introduction</h2>
+        <div class="max-w-4xl space-y-10">
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Pourquoi la méthode par soft laser&nbsp;?</h3>
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">La méthode de fabrication de PCB par laser de faible puissance permet d’obtenir des circuits imprimés d’une bonne précision, pour un coût très réduit au regard de la qualité du résultat final.</p>
+          </div>
+
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Comment fonctionne cette méthode&nbsp;?</h3>
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">Cette méthode appliquer une couche protectrice sur la carte vierge, modelée à l’aide de la graveuse laser, afin que le perchlorure de fer n’élimine le cuivre qu’aux endroits souhaités. Une couche de solder mask est ensuite appliquée puis regravée afin de dégager les zones destinées aux soudures.</p>
+            <p class="mt-4 text-base leading-relaxed text-gray-700 sm:text-lg">On obtient ainsi une carte de bonne qualité, répondant aux besoins de nombreux projets électroniques qui nécessitent habituellement de commander leurs PCB auprès de sites spécialisés tels que JLCPCB ou Eurocircuits.</p>
+          </div>
+
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Pourquoi ne pas graver directement au laser pour enlever le cuivre&nbsp;?</h3>
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">Les lasers permettant de graver le cuivre doivent être extrêmement puissant ou d’une autre technologie mais ces modèles sont très couteux. Le laser utilisé dans cette méthode doit être juste assez puissant pour graver de la peinture ce qui a permis de prendre un laser à moins de 100€.</p>
+          </div>
+
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Pourquoi ne pas utiliser une fraiseuse CNC pour faire les cartes&nbsp;?</h3>
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">Il est vrai qu’utiliser une fraiseuse CNC permet de retirer directement le cuivre sur les cartes et évite ainsi les étapes avec le perchlorure de fer MAIS cette méthode est déjà plus couteuse mais également (et à mon sens) plus complexe à mettre en place car il y a bien plus de paramètres à prendre en compte que simplement exposer le laser sur le dessus de la carte. C’est une méthode qui est également plus longue et moins précise qu’un très fin laser. Avec la fraiseuse, les têtes peuvent s’user et perdre en précision ce qui n‘est pas le cas avec un laser. A savoir qu’il est évidement possible d’arriver à une incroyable précision avec une fraiseuse CNC, meilleure que la méthode au laser, mais avec des fraiseuses CNC 5 fois plus cher que la méthode utilisée ici.</p>
+          </div>
+
+          <div>
+            <h3 class="mb-8 text-2xl font-bold text-primary sm:text-3xl">Quels sont les avantages et les inconvénients de cette méthode&nbsp;?</h3>
+            <h4 class="mt-6 mb-3 text-xl font-bold text-red-600 sm:text-2xl">Through-Hole</h4>
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">Cette méthode est très adaptée aux composants SMA. En effet, l’imprécision liée à la réalisation manuelle des trous pour les composants traversants les rendre difficiles à souder. Il ne reste parfois que très peu de matière autour du trou, ou un mauvais alignement peut rendre la soudure complexe voir impossible (voir image étape 10). Il est toutefois possible de résoudre ce problème en adaptant le footprint de chaque composant traversant afin de le rendre légèrement plus large. Cependant, cette modification rallonge le temps de conception et peut compromettre l’intégrité de certains composants traversants.</p>
+            <h4 class="mt-8 mb-3 text-xl font-bold text-red-600 sm:text-2xl">Double couche</h4>
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">À l’heure actuelle, il n’est pas réellement facile de réaliser un PCB double couche avec cette méthode. Il est nécessaire de retourner la carte et d’effectuer un alignement très précis, ce qui est particulièrement difficile à réaliser manuellement. Il reste cependant possible d’effectuer des connexions sur l’autre couche à l’aide de fins fils de cuivre permettant de relier certains points de la carte entre eux.</p>
+            <h4 class="mt-8 mb-3 text-xl font-bold text-green-600 sm:text-2xl">Rapidité</h4>
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">Cette méthode est relativement rapide, avec un temps de fabrication d’environ 1 à 2 heures. Elle permet ainsi d’obtenir une carte fonctionnelle le jour même de sa modélisation. Cette rapidité permet de diminuer le temps nécessaire au prototypage et, par conséquent, de raccourcir le temps global de conception d’un projet.</p>
+            <h4 class="mt-8 mb-3 text-xl font-bold text-green-600 sm:text-2xl">Coût</h4>
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">Cette méthode ne nécessite aucun équipement particulièrement coûteux. La graveuse laser m’a coûté environ 110 €, tandis que le reste du matériel représente moins de 90 €. Le coût total du matériel peut donc être estimé à environ 200 €. Après cet investissement initial, seuls les PCB vierges doivent être régulièrement achetés, puisque la majorité du matériel est réutilisable pour chaque nouvelle carte. J’ai déjà eu l’occasion de réaliser une dizaine de cartes avec cette méthode. Le coût de fabrication de ces cartes aurait été largement supérieur à 200 € si elles avaient été commandées auprès d’un fabricant spécialisé.</p>
+            <h4 class="mt-8 mb-3 text-xl font-bold text-green-600 sm:text-2xl">Facilité de mise en oeuvre</h4>
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">Cette méthode est relativement simple à mettre en pratique une fois que chaque étape est bien maîtrisée. Sa mise au point m’a cependant demandé un certain temps, notamment parce qu’aucun tutoriel ne présentait exactement cette méthode. Je me suis donc basé sur les avantages des différentes méthodes existantes afin de sélectionner les techniques qui me semblaient les plus pertinentes et de les combiner pour obtenir un procédé adapté à mes besoins. Cependant, avec le guide présenté ci-dessous, je suis convaincu qu’il est possible d’obtenir une carte de bonne qualité dès la première réalisation.</p>
+            <h4 class="mt-8 mb-3 text-xl font-bold text-green-600 sm:text-2xl">Ecologie</h4>
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">Cette méthode présente également un intérêt sur le plan environnemental. Contrairement à la commande de PCB auprès de fabricants situés à l’étranger, elle permet de réaliser directement les prototypes sur place et limite ainsi les besoins en transport qui sont très polluants (Cargo, avion, etc).</p>
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">La fabrication industrielle de PCB nécessite par ailleurs des procédés et des équipements importants en matière de consommation d’énergie et de ressources. Avec cette méthode, les déplacements et les commandes sont limités principalement à l’achat ponctuel de PCB vierges, de solder mask et des autres consommables nécessaires, qui peuvent pour la plupart être réutilisés.</p>
+            </div>
+
+            <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Conclusion</h3>
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">Comme expliqué précédemment, cette méthode ne convient pas à tous les projets. Je reste cependant persuadé qu’une bonne partie des prototypes et des petits projets électroniques peuvent être réalisés de cette manière. Cela permettrait de limiter le recours systématique à la fabrication industrielle pour des besoins qui peuvent être satisfaits localement.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="materiel" class="bg-bgSecondary px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="mb-6 text-3xl font-bold text-primary sm:text-4xl">Matériel nécessaire</h2>
+        <div class="mt-8 max-w-3xl rounded-xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
+          <ul class="list-disc space-y-3 pl-5 leading-relaxed text-gray-700">
+            <li>Petite graveuse laser</li>
+            <li>Petits bacs en plastique</li>
+            <li>Pinceau</li>
+            <li>Solder mask UV</li>
+            <li>Bombe de peinture mat</li>
+            <li>Perchlorure de fer</li> 
+            <li>Plaque de cuivre vierge</li> 
+            <li>Cotton tiges</li> 
+            <li>Alcool isopropylique</li> 
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="etape-1" class="bg-white px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-primary">Étape 1</p>
+        <h2 class="mb-10 text-3xl font-bold text-primary sm:text-4xl">Lors de la conception du PCB</h2>
+
+        <div class="max-w-4xl space-y-10">
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Création du cadre d'alignement</h3>
+            <div class="space-y-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <p>Lors de la conception du PCB, il est très important de créer un cadre sur le Bottom Copper Layer ou le Top Copper Layer, en fonction de la couche sur laquelle vous travaillez, ainsi que sur le Solder Mask Layer correspondant. En effet, afin que, dans LaserGRBL, les couches de cuivre et de solder mask soient parfaitement alignées, il est nécessaire qu’elles possèdent exactement le même cadre, placé au même endroit.</p>
+              <p>DONC, comme dans l’exemple de conception ci-dessous, je crée un cadre sur le Bottom Copper Layer, puis je reproduis exactement le même cadre sur le Bottom Solder Mask Layer.</p>
+            </div>
+            <img src="./ressources/PCB_DIY/PCBDIY_2.png" alt="Cadre d'alignement du circuit imprimé" class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg" />
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">Note : Ici, le polygone GND fait office de cadre pour le Bottom Copper Layer.</p>
+            <img src="./ressources/PCB_DIY/PCBDIY_1.png" alt="Cadre du circuit imprimé" class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg" />
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">Ces cadres permettent alors d’aligner correctement les différentes couches dans le laser afin d’enlever le solder mask aux endroits souhaités et d’obtenir un bon résultat.</p>
+          </div>
+
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Utilisation de « vias »</h3>
+            <div class="space-y-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <p>Comme expliqué dans les désavantages, il n’est pas possible de réaliser une carte à deux couches, et les through-hole sont difficiles à mettre en place. Il est cependant possible de créer un « via » suffisamment large pour permettre une bonne soudure et qui servirait à relier un autre via, à l’aide d’un fil de cuivre, afin de pouvoir effectuer une connexion par l’autre côté de la carte.</p>
+              <p>On observe sur la conception ci-dessous que plusieurs vias ont été créés afin que, par la suite, deux fils de cuivre placés sur le top puissent traverser la carte jusqu’au bottom et y être soudés. Ils permettent ainsi de relier deux endroits qui n’auraient pas pu être connectés autrement.</p>
+            </div>
+            <img src="./ressources/PCB_DIY/PCBDIY_3.png" alt="Exemple de vias sur un circuit imprimé" class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg" />
+            <div class="space-y-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <p>Note : Dans cette conception, les vias n’étaient pas suffisamment larges et les soudures étaient donc complexes à réaliser. Il est donc très important de calculer correctement leurs dimensions et d’effectuer des tests en fonction du fil utilisé afin d’obtenir un bon résultat.</p>
+              <p>Cette approche est donc à prendre en compte lors de la conception du PCB si des passages sur l’autre couche sont nécessaires.</p>
+            </div>
+          </div>
+        </div>
+    
+    </div>
+    </section>
+
+    <section id="etape-2" class="bg-bgSecondary px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-primary">Étape 2</p>
+        <h2 class="mb-6 text-3xl font-bold text-primary sm:text-4xl">Prétraitement</h2>
+        <p class="max-w-4xl text-base leading-relaxed text-gray-700 sm:text-lg">Cette étape permet de préparer le PCB vierge aux traitements qui vont suivre. En effet, lors de sa fabrication et de son transport, la carte peut subir des frottements et présenter certaines imperfections qu’il est nécessaire de corriger afin d’obtenir une gravure uniforme sur l’ensemble de sa surface.</p>
+        <ol class="mt-8 max-w-4xl space-y-4">
+          <li class="flex gap-4 border-l-4 border-primary bg-white p-5 text-base leading-relaxed text-gray-700 sm:text-lg">
+            <strong class="shrink-0 text-primary">01</strong>
+            <span>Poncer le cuivre afin d’obtenir une surface propre et parfaitement lisse.</span>
+          </li>
+          <li class="flex gap-4 border-l-4 border-primary bg-white p-5 text-base leading-relaxed text-gray-700 sm:text-lg">
+            <strong class="shrink-0 text-primary">02</strong>
+            <span>Nettoyer la carte à l’eau afin d’éliminer les résidus liés au ponçage.</span>
+          </li>
+          <li class="flex gap-4 border-l-4 border-primary bg-white p-5 text-base leading-relaxed text-gray-700 sm:text-lg">
+            <strong class="shrink-0 text-primary">03</strong>
+            <span>Faire sécher soigneusement la carte avant de passer à l’étape suivante.</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="etape-3" class="bg-white px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-primary">Étape 3</p>
+        <h2 class="mb-6 text-3xl font-bold text-primary sm:text-4xl">Peinture protectrice</h2>
+        <p class="max-w-4xl text-base leading-relaxed text-gray-700 sm:text-lg">Cette étape permet d’appliquer la peinture qui va protéger le cuivre aux endroits où il ne faut pas que le perchlorure de fer l’enlève.</p>
+        <ol class="mt-8 max-w-4xl space-y-4">
+          <li class="flex gap-4 border-l-4 border-primary bg-bgSecondary p-5 text-base leading-relaxed text-gray-700 sm:text-lg">
+            <strong class="shrink-0 text-primary">01</strong>
+            <span>Appliquer une fine couche de peinture à la bombe en faisant des mouvements de gauche à droite et en essayant d’être le plus homogène possible. Il faut simplement recouvrir la surface avec la peinture, sans mettre une couche trop épaisse, car elle serait plus difficile à enlever par la suite.</span>
+          </li>
+          <li class="flex gap-4 border-l-4 border-primary bg-bgSecondary p-5 text-base leading-relaxed text-gray-700 sm:text-lg">
+            <strong class="shrink-0 text-primary">02</strong>
+            <span>Faire sécher la peinture avec un ventilateur pour accélérer le séchage.</span>
+          </li>
+          <li class="flex gap-4 border-l-4 border-primary bg-bgSecondary p-5 text-base leading-relaxed text-gray-700 sm:text-lg">
+            <strong class="shrink-0 text-primary">03</strong>
+            <span>Attendre au moins 30 minutes, puis vérifier si la peinture est encore légèrement collante. Si c’est le cas, elle n’est pas encore complètement sèche.</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="etape-4" class="bg-bgSecondary px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-primary">Étape 4</p>
+        <h2 class="mb-6 text-3xl font-bold text-primary sm:text-4xl">Gravure de la peinture</h2>
+        <p class="max-w-4xl text-base leading-relaxed text-gray-700 sm:text-lg">Cette étape permet de modeler la couche de protection afin d’enlever le cuivre aux endroits souhaités.</p>
+
+        <div class="mt-10 max-w-4xl space-y-10">
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Préparer l’image</h3>
+            <ol class="space-y-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">01</strong><span>Importer le fichier PNG de la Copper Layer. Utiliser <a href="https://online.reaconverter.com/convert/gbl-to-png" target="_blank" rel="noopener noreferrer" class="font-semibold text-primary underline">reaConverter</a> pour convertir le fichier GBL ou GTL en PNG.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">02</strong><span>Effectuer une symétrie verticale de l’image si la carte est réalisée sur le <strong>Bottom Layer</strong>. Pour une carte réalisée sur le <strong>Top Layer</strong>, aucune symétrie n’est nécessaire.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">03</strong><span>Vérifier les couleurs dans LaserGRBL. Les zones apparaissant en <strong>noir</strong> correspondent aux endroits où le laser va retirer la peinture, et donc aux endroits où le cuivre sera ensuite éliminé par le perchlorure de fer. Si les couleurs sont inversées, utiliser l’option <strong>« Inversion des couleurs »</strong>.</span></li>
+            </ol>
+          </div>
+
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Régler LaserGRBL</h3>
+            <p class="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">Dans les paramètres de gravure, sélectionner les réglages suivants :</p>
+            <ul class="list-disc space-y-2 border-l-4 border-primary bg-white p-5 pl-10 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <li><strong>Noir et blanc</strong></li>
+              <li><strong>Tracé par ligne</strong></li>
+              <li><strong>Direction : horizontale</strong></li>
+              <li><strong>Qualité : 20 lignes/mm</strong></li>
+            </ul>
+            <p class="mb-4 mt-6 text-base leading-relaxed text-gray-700 sm:text-lg">Dans le menu <strong>« Image cible »</strong>, configurer les paramètres suivants :</p>
+            <ul class="list-disc space-y-2 border-l-4 border-primary bg-white p-5 pl-10 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <li><strong>Vitesse de gravure : 4000 mm/min</strong></li>
+              <li><strong>Mode laser : M3</strong></li>
+              <li><strong>S-MIN : 0</strong></li>
+              <li><strong>S-MAX : 400</strong></li>
+              <li>Cocher <strong>« Taille automatique »</strong> afin de conserver la taille réelle de l’image PNG de la Copper Layer.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Positionner la carte</h3>
+            <ol class="space-y-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">01</strong><span>Positionner la carte avec la face recouverte de peinture orientée vers le laser.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">02</strong><span>Vérifier que la zone de gravure reste entièrement à l’intérieur de la carte en utilisant la fonction <strong>« Framing »</strong>.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">03</strong><span>Une fois l’emplacement déterminé, utiliser d’autres cartes afin de créer un repère de positionnement. Celui-ci permettra de replacer la carte de manière parfaitement alignée lors de l’étape de gravure du Solder Mask.</span></li>
+            <img src="./ressources/PCB_DIY/PCBDIY_4.png" alt="Cadre d'alignement du circuit imprimé" class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg" />
+
+            </ol>
+          </div>
+
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Effectuer les gravures</h3>
+            <div class="mb-6 border-l-4 border-red-600 bg-red-50 p-5 text-base leading-relaxed text-gray-700 sm:text-lg"><strong class="text-red-600">Sécurité :</strong> mettre les lunettes de protection avant chaque gravure et ne pas toucher à la carte une fois le laser lancé.</div>
+            <ol class="space-y-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">01</strong><span>Mettre les lunettes de protection, puis lancer la gravure horizontale.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">02</strong><span>Une fois la gravure terminée, ne pas toucher à la carte.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">03</strong><span>Aller dans <strong>« Fichier » → « Recharger le dernier fichier »</strong>, puis modifier la direction de gravure en sélectionnant <strong>« Vertical »</strong>. Vérifier que tous les autres paramètres sont identiques.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">04</strong><span>Mettre les lunettes de protection, puis lancer à nouveau la gravure.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">05</strong><span>Une fois la gravure terminée, ne pas toucher à la carte.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">06</strong><span>Aller dans <strong>« Fichier » → « Recharger le dernier fichier »</strong>, puis sélectionner la direction <strong>« Diagonal »</strong>. Vérifier une nouvelle fois que tous les autres paramètres sont identiques.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">07</strong><span>Mettre les lunettes de protection, puis lancer la dernière gravure.</span></li>
+            </ol>
+          </div>
+
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Nettoyer et contrôler</h3>
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">Nettoyer les zones gravées à l’aide d’un coton-tige et d’un peu d’eau. Cela permet d’éliminer les petits résidus laissés par le passage du laser ainsi que le dernier film de peinture éventuellement présent sur le cuivre.</p>
+            <p class="mt-4 text-base leading-relaxed text-gray-700 sm:text-lg">Le cuivre doit alors être clairement visible, comme présenté sur l’image ci-dessous.</p>
+            <img src="./ressources/PCB_DIY/PCBDIY_5.png" alt="Cadre d'alignement du circuit imprimé" class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg" />
+
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="etape-5" class="bg-white px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-primary">Étape 5</p>
+        <h2 class="mb-6 text-3xl font-bold text-primary sm:text-4xl">Enlever le cuivre</h2>
+        <p class="max-w-4xl text-base leading-relaxed text-gray-700 sm:text-lg">Cette étape permet d’enlever le cuivre aux endroits où il n’y a pas de peinture protectrice.</p>
+        <div class="mt-8 max-w-4xl border-l-4 border-red-600 bg-red-50 p-5 text-base leading-relaxed text-gray-700 sm:text-lg">
+          <strong class="text-red-600">Attention :</strong> le perchlorure de fer est dangereux pour la santé. Il ne faut ni le toucher ni respirer ses émanations. Il est donc très important de porter des gants, un masque et des lunettes de protection.
+        </div>
+        <ol class="mt-8 max-w-4xl space-y-4">
+          <li class="flex gap-4 border-l-4 border-primary bg-bgSecondary p-5 text-base leading-relaxed text-gray-700 sm:text-lg">
+            <strong class="shrink-0 text-primary">01</strong>
+            <span>Plonger la carte, peinture vers soi, dans un bac contenant du perchlorure de fer.</span>
+          </li>
+          <li class="flex gap-4 border-l-4 border-primary bg-bgSecondary p-5 text-base leading-relaxed text-gray-700 sm:text-lg">
+            <strong class="shrink-0 text-primary">02</strong>
+            <span>Faire bouger le bac de droite à gauche, puis d’avant en arrière, afin de faire circuler le liquide sur la carte.</span>
+          </li>
+          <li class="flex gap-4 border-l-4 border-primary bg-bgSecondary p-5 text-base leading-relaxed text-gray-700 sm:text-lg">
+            <strong class="shrink-0 text-primary">03</strong>
+            <span>Passer délicatement un pinceau à poils doux sur la carte afin de faire pénétrer le perchlorure de fer dans les zones les plus fines.</span>
+          </li>
+          <li class="flex gap-4 border-l-4 border-primary bg-bgSecondary p-5 text-base leading-relaxed text-gray-700 sm:text-lg">
+            <strong class="shrink-0 text-primary">04</strong>
+            <span>Sortir régulièrement la carte, l’essuyer et vérifier devant une source de lumière si tout le cuivre non protégé par la peinture a bien été retiré. Si nécessaire, replonger la carte et recommencer les étapes précédentes.</span>
+          </li>
+          <li class="flex gap-4 border-l-4 border-primary bg-bgSecondary p-5 text-base leading-relaxed text-gray-700 sm:text-lg">
+            <strong class="shrink-0 text-primary">05</strong>
+            <span>Lorsque tout le cuivre a été retiré, nettoyer la carte à l’eau afin d’éliminer le perchlorure de fer restant sur sa surface.</span>
+          </li>
+            <img src="./ressources/PCB_DIY/PCBDIY_6.png" alt="Cadre d'alignement du circuit imprimé" class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg" />
+
+        </ol>
+      </div>
+    </section>
+
+    <section id="etape-6" class="bg-bgSecondary px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-primary">Étape 6</p>
+        <h2 class="mb-6 text-3xl font-bold text-primary sm:text-4xl">Révéler le cuivre</h2>
+        <div class="max-w-4xl space-y-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+          <p>Avec un papier imbibé d’éthanol, enlever la peinture afin de faire apparaître le cuivre caché durant les étapes précédentes.</p>
+          <img src="./ressources/PCB_DIY/PCBDIY_7.png" alt="Cadre d'alignement du circuit imprimé" class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg" />
+          <p>Il est important de vérifier qu’aucun court-circuit n’est présent avant d’appliquer le solder mask. Il est intéressant d’effectuer cette vérification à l’aide d’un test de continuité, associé à une observation au microscope numérique.</p>
+          <img src="./ressources/PCB_DIY/PCBDIY_8.png" alt="Cadre d'alignement du circuit imprimé" class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg" />
+
+        </div>
+      </div>
+    </section>
+
+    <section id="etape-7" class="bg-white px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-primary">Étape 7</p>
+        <h2 class="mb-6 text-3xl font-bold text-primary sm:text-4xl">Application du solder mask</h2>
+        <p class="max-w-4xl text-base leading-relaxed text-gray-700 sm:text-lg">Le <strong>solder mask</strong> permet d’obtenir une couche isolante sur les zones où aucune soudure ne sera réalisée. Il protège ainsi le cuivre et limite les risques de courts-circuits avec les éléments environnants.</p>
+        <ol class="mt-8 max-w-4xl space-y-4">
+          <li class="flex gap-4 border-l-4 border-primary bg-bgSecondary p-5 text-base leading-relaxed text-gray-700 sm:text-lg">
+            <strong class="shrink-0 text-primary">01</strong>
+            <span><strong>Tendre une toile</strong> avec un maillage suffisamment fin pour obtenir une application précise, tout en conservant des ouvertures assez grandes pour permettre le passage du solder mask. Un maillage de <strong>80</strong> peut par exemple être utilisé. La toile permet d’appliquer le solder mask de manière uniforme : celui-ci ne peut traverser que les ouvertures du maillage, ce qui permet d’obtenir une couche régulière une fois la toile retirée.</span>
+          </li>
+          <img src="./ressources/PCB_DIY/PCBDIY_13.png" alt="Circuit imprimé après application du solder mask" class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg" />
+
+          <li class="flex gap-4 border-l-4 border-primary bg-bgSecondary p-5 text-base leading-relaxed text-gray-700 sm:text-lg">
+            <strong class="shrink-0 text-primary">02</strong>
+            <span><strong>Appliquer le solder mask</strong> à l’aide d’une carte rigide, par exemple une ancienne carte <strong>HUBO</strong>, afin de l’étaler uniformément sur toute la surface de la carte. Retirer délicatement le maillage, puis faire sécher le solder mask sous une lampe UV pendant environ 15 minutes.</span>
+          </li>
+        </ol>
+        <img src="./ressources/PCB_DIY/PCBDIY_9.png" alt="Circuit imprimé après application du solder mask" class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg" />
+      </div>
+    </section>
+
+    <section id="etape-8" class="bg-bgSecondary px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-primary">Étape 8</p>
+        <h2 class="mb-6 text-3xl font-bold text-primary sm:text-4xl">Gravure du solder mask</h2>
+        <p class="max-w-4xl text-base leading-relaxed text-gray-700 sm:text-lg">Cette étape permet d’enlever le <strong>solder mask</strong> aux endroits où des soudures doivent être réalisées, afin de laisser le cuivre apparent.</p>
+
+        <div class="mt-10 max-w-4xl space-y-10">
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Préparer le fichier</h3>
+            <ol class="space-y-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">01</strong><span>Importer le fichier PNG du Solder Mask. Utiliser <a href="https://online.reaconverter.com/convert/gbl-to-png" target="_blank" rel="noopener noreferrer" class="font-semibold text-primary underline">reaConverter</a> pour convertir le fichier <strong>GBS</strong> ou <strong>GTS</strong> en PNG.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">02</strong><span>Effectuer une symétrie verticale de l’image si la carte est réalisée sur le <strong>Bottom Layer</strong>. Pour une carte réalisée sur le <strong>Top Layer</strong>, aucune symétrie n’est nécessaire.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">03</strong><span>Vérifier les couleurs. Les zones apparaissant en <strong>noir</strong> correspondent aux endroits où le laser va retirer le solder mask. Si les couleurs sont inversées, utiliser l’option <strong>« Inversion des couleurs »</strong>.</span></li>
+            </ol>
+          </div>
+
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Régler LaserGRBL</h3>
+            <p class="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">Dans les paramètres de gravure, sélectionner les réglages suivants :</p>
+            <ul class="list-disc space-y-2 border-l-4 border-primary bg-white p-5 pl-10 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <li><strong>Noir et blanc</strong></li>
+              <li><strong>Tracé par ligne</strong></li>
+              <li><strong>Direction : horizontale</strong></li>
+              <li><strong>Qualité : 20 lignes/mm</strong></li>
+            </ul>
+            <p class="mb-4 mt-6 text-base leading-relaxed text-gray-700 sm:text-lg">Dans le menu <strong>« Image cible »</strong>, configurer les paramètres suivants :</p>
+            <ul class="list-disc space-y-2 border-l-4 border-primary bg-white p-5 pl-10 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <li><strong>Vitesse de gravure : 2000 mm/min</strong></li>
+              <li><strong>Mode laser : M3</strong></li>
+              <li><strong>S-MIN : 0</strong></li>
+              <li><strong>S-MAX : 900</strong></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Positionner la carte</h3>
+            <p class="border-l-4 border-primary bg-white p-5 text-base leading-relaxed text-gray-700 sm:text-lg">Positionner la carte avec la face recouverte de solder mask orientée vers le laser, dans la même position et contre les mêmes cartes de repérage que lors de la première gravure. Cela permet de conserver un alignement précis entre les différentes couches.</p>
+            <img src="./ressources/PCB_DIY/PCBDIY_14.png" alt="Cuivre apparent après gravure du solder mask" class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg" />
+
+        </div>
+
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Effectuer les gravures</h3>
+            <div class="mb-6 border-l-4 border-red-600 bg-red-50 p-5 text-base leading-relaxed text-gray-700 sm:text-lg"><strong class="text-red-600">Sécurité :</strong> mettre les lunettes de protection avant chaque gravure et ne pas toucher à la carte lorsque le laser fonctionne.</div>
+            <ol class="space-y-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">01</strong><span>Mettre les lunettes de protection, puis lancer la gravure horizontale.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">02</strong><span>Une fois la gravure terminée, ne pas toucher à la carte.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">03</strong><span>Recharger le dernier fichier, sélectionner la direction <strong>« Vertical »</strong>, puis vérifier que tous les autres paramètres sont identiques.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">04</strong><span>Mettre les lunettes de protection, puis lancer à nouveau la gravure. Une fois terminée, ne pas toucher à la carte.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">05</strong><span>Recharger le dernier fichier et sélectionner la direction <strong>« Diagonal »</strong>. Vérifier une nouvelle fois que tous les autres paramètres sont identiques.</span></li>
+              <li class="flex gap-4 border-l-4 border-primary bg-white p-5"><strong class="shrink-0 text-primary">06</strong><span>Mettre les lunettes de protection, puis lancer la dernière gravure.</span></li>
+            </ol>
+          </div>
+
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Nettoyer et contrôler</h3>
+            <div class="space-y-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <p>Cette méthode permet d’effectuer la gravure dans plusieurs directions afin d’éliminer un maximum de solder mask. Elle évite ainsi de laisser de fines lignes ou de petits résidus susceptibles de gêner les soudures.</p>
+              <p>Nettoyer les zones gravées à l’aide d’un coton-tige et d’un peu d’alcool isopropylique. Cela permet d’éliminer les petits résidus laissés par le passage du laser ainsi que le dernier film de solder mask éventuellement présent sur le cuivre.</p>
+              <p>Le cuivre doit alors être clairement visible aux endroits destinés aux soudures, comme présenté sur l’image ci-dessous.</p>
+            </div>
+            <img src="./ressources/PCB_DIY/PCBDIY_10.png" alt="Cuivre apparent après gravure du solder mask" class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="etape-9" class="bg-white px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-primary">Étape 9</p>
+        <h2 class="mb-6 text-3xl font-bold text-primary sm:text-4xl">Couper la carte</h2>
+      </div>
+    </section>
+
+    <section id="etape-10" class="bg-bgSecondary px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-primary">Étape 10</p>
+        <h2 class="mb-6 text-3xl font-bold text-primary sm:text-4xl">Faire les trous (si nécessaire)</h2>
+        <div class="max-w-4xl space-y-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+          <p>Afin d’obtenir des trous petits et relativement précis, il est intéressant d’utiliser un <em>drill stand</em> permettant de forer perpendiculairement à la carte. Il est possible d’en imprimer un en 3D : il ne nécessite alors que l’achat de quelques vis et tiges filetées, ce qui évite de dépenser 30&nbsp;€ uniquement pour cet usage.</p>
+          <img src="./ressources/PCB_DIY/PCBDIY_11.jpg" alt="Cuivre apparent après gravure du solder mask" class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg" />
+          <p>Comme expliqué dans les inconvénients, cette méthode n’est pas parfaite car, vu la taille des trous, il est facile de ne pas être parfaitement aligné. Même lorsque l’alignement est correct, il ne reste souvent pas assez de cuivre autour du trou pour obtenir une bonne soudure.</p>
+          <img src="./ressources/PCB_DIY/PCBDIY_15.jpg" alt="Cuivre apparent après gravure du solder mask" class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg" />
+        </div>
+      </div>
+    </section>
+
+    <section id="bilan" class="bg-white px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="mb-6 text-3xl font-bold text-primary sm:text-4xl">Résultat final</h2>
+        <img src="./ressources/PCB_DIY/PCBDIY_12.png" alt="Cuivre apparent après gravure du solder mask" class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg" />
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t bg-white px-4 py-10 text-center">
+    <p class="font-semibold text-primary">Electro-note</p>
+    <p class="mt-2 text-sm text-gray-500">Carnet de projets électroniques</p>
+  </footer>
+</body>
+</html>

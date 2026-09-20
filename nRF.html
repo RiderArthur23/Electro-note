@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="fr" style="scroll-behavior: smooth;">
+  <link
+  href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css"
+  rel="stylesheet"
+/>
+
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-c.min.js"></script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nordic nRF | Electro-note</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3b7cae',
+            secondary: '#3b7cae',
+            bgPrimary: '#ffffff',
+            bgSecondary: '#f3f4f6',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    section[id],
+    [id] {
+      scroll-margin-top: 6rem;
+    }
+
+    a {
+      text-decoration: none;
+      color: #464feb;
+    }
+
+    tr th,
+    tr td {
+      border: 1px solid #e6e6e6;
+    }
+
+    tr th {
+      background-color: #f5f5f5;
+    }
+
+    .topic-link.active {
+      color: #3b7cae;
+      background: #eff6fb;
+      font-weight: 700;
+    }
+
+    .topic-link.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+      bottom: 0.5rem;
+      width: 3px;
+      border-radius: 999px;
+      background: #3b7cae;
+    }
+  </style>
+</head>
+
+<body class="bg-bgPrimary text-gray-900">
+  <header class="fixed left-0 top-0 z-[10000] w-full border-b bg-white shadow-sm">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="./ressources/Index/Logo_ElectroSite.png" alt="Logo Electro-note" class="h-12 w-auto" />
+        <span class="text-xl font-bold text-primary">Electro-note</span>
+      </a>
+      <a href="index.html#Sujets" class="rounded-full border border-primary px-4 py-2 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">
+        Tous les sujets
+      </a>
+    </div>
+  </header>
+
+  <aside class="fixed bottom-0 left-0 top-20 z-40 hidden w-64 overflow-y-auto border-r bg-white/95 px-5 py-8 shadow-sm backdrop-blur md:block" aria-label="Navigation de la page">
+    <div class="flex h-full flex-col">
+      <div class="mb-8">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-gray-500">Sommaire</p>
+        <div class="mt-4 h-1.5 overflow-hidden rounded-full bg-gray-200" aria-hidden="true">
+          <div id="reading-progress" class="h-full w-0 rounded-full bg-primary transition-[width] duration-150"></div>
+        </div>
+        <p class="mt-2 text-xs text-gray-500"><span id="reading-progress-label">0</span> % parcouru</p>
+      </div>
+
+      <nav class="space-y-1" aria-label="Topics nRF">
+        <a href="#introduction" data-section="introduction" class="topic-link active relative block rounded-r-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-primary">Introduction</a>
+        <a href="#etape-1" data-section="etape-1" class="topic-link relative block rounded-r-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-primary">Installation</a>
+        <a href="#etape-2" data-section="etape-2" class="topic-link relative block rounded-r-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-primary">GPIOs</a>
+        <a href="#etape-3" data-section="etape-3" class="topic-link relative block rounded-r-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-primary">Bluetooth Low Energy</a>
+        <div class="ml-3 border-l border-gray-200 pl-2">
+          <a href="#ble-resume" class="block rounded-r-lg px-3 py-1.5 text-xs text-gray-500 transition hover:bg-gray-100 hover:text-primary">Résumé du BLE</a>
+          <a href="#ble-advertising" class="block rounded-r-lg px-3 py-1.5 text-xs text-gray-500 transition hover:bg-gray-100 hover:text-primary">Advertising</a>
+          <a href="#ble-advertising-types" class="block rounded-r-lg px-3 py-1.5 text-xs text-gray-500 transition hover:bg-gray-100 hover:text-primary">Advertising connectable</a>
+          <a href="#ble-connexion" class="block rounded-r-lg px-3 py-1.5 text-xs text-gray-500 transition hover:bg-gray-100 hover:text-primary">Connexion BLE</a>
+          <a href="#ble-gatt" class="block rounded-r-lg px-3 py-1.5 text-xs text-gray-500 transition hover:bg-gray-100 hover:text-primary">Protocole GATT</a>
+          <a href="#ble-services" class="block rounded-r-lg px-3 py-1.5 text-xs text-gray-500 transition hover:bg-gray-100 hover:text-primary">Services</a>
+          <a href="#ble-characteristics" class="block rounded-r-lg px-3 py-1.5 text-xs text-gray-500 transition hover:bg-gray-100 hover:text-primary">Caractéristiques</a>
+          <a href="#ble-gatt-example" class="block rounded-r-lg px-3 py-1.5 text-xs text-gray-500 transition hover:bg-gray-100 hover:text-primary">Communication GATT</a>
+          <a href="#ble-energy" class="block rounded-r-lg px-3 py-1.5 text-xs text-gray-500 transition hover:bg-gray-100 hover:text-primary">Économie d’énergie</a>
+          <a href="#ble-code-advertising" class="block rounded-r-lg px-3 py-1.5 text-xs text-gray-500 transition hover:bg-gray-100 hover:text-primary">Code advertising</a>
+          <a href="#ble-code-gatt" class="block rounded-r-lg px-3 py-1.5 text-xs text-gray-500 transition hover:bg-gray-100 hover:text-primary">Code GATT</a>
+        </div>
+        <a href="#etape-4" data-section="etape-4" class="topic-link relative block rounded-r-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-primary">Communication I2C</a>
+      </nav>
+
+      <a href="#top" class="mt-auto text-sm font-semibold text-primary hover:underline">Retour en haut ↑</a>
+    </div>
+  </aside>
+
+  <div class="sticky top-20 z-30 border-b bg-white px-4 py-3 shadow-sm md:hidden">
+    <div class="mb-2 flex items-center justify-between text-xs font-semibold text-gray-500">
+      <span>Navigation</span>
+      <span><span id="mobile-reading-progress-label">0</span> %</span>
+    </div>
+    <div class="mb-3 h-1.5 overflow-hidden rounded-full bg-gray-200" aria-hidden="true">
+      <div id="mobile-reading-progress" class="h-full w-0 rounded-full bg-primary transition-[width] duration-150"></div>
+    </div>
+    <nav class="flex gap-2 overflow-x-auto pb-1" aria-label="Navigation mobile des topics nRF">
+      <a href="#introduction" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Introduction</a>
+      <a href="#etape-1" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Installation</a>
+      <a href="#etape-2" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">LED</a>
+      <a href="#etape-3" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Bluetooth</a>
+      <a href="#ble-gatt" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">GATT</a>
+      <a href="#ble-energy" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Énergie BLE</a>
+      <a href="#etape-4" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">I2C</a>
+    </nav>
+  </div>
+
+  <main id="top" class="pt-24 md:pl-64">
+    <section class="bg-bgSecondary px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl text-center">
+        <h1 class="text-4xl font-bold leading-tight text-primary sm:text-5xl lg:text-6xl">Nordic nRF</h1>
+      </div>
+    </section>
+
+    <section id="introduction" class="bg-white px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="mb-10 text-center text-3xl font-bold text-primary sm:text-4xl md:text-left">Introduction</h2>
+        <div class="max-w-4xl space-y-10">
+          <div>
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">
+              Les puces nRF sont une famille de microcontrôleurs sans fil développés par Nordic Semiconductor,
+              très populaires dans l’IoT (Internet des objets), les objets connectés, les capteurs,
+              les claviers et souris sans fil, les wearables et même certains produits industriels.
+            </p>
+            <p class="mb-8 text-base leading-relaxed text-gray-700 sm:text-lg">
+              Elles sont très appréciées car elles combinent un microcontrôleur ARM Cortex-M,
+              une ou plusieurs radios sans fil, une faible consommation d’énergie et de nombreuses
+              interfaces périphériques (SPI, I2C, UART, PWM, ADC, etc.).
+            </p>
+            <p class="text-base leading-relaxed text-gray-700 sm:text-lg">
+              Dans les explications ci-dessous, le microcontrôleur ANNA-B112 est utilisé.
+              En effet, ce module intègre une puce nRF52832 ainsi que tous les composants nécessaires
+              à son fonctionnement, ce qui permet de disposer d’une solution prête à être intégrée dans
+              une application. L’ANNA-B112 regroupe ainsi, dans un seul boîtier, la puce nRF,
+              l’antenne RF, les oscillateurs, les composants passifs et, surtout, les certifications
+              nécessaires. Cela évite de devoir concevoir et certifier soi-même la partie radio lors
+              d’une éventuelle commercialisation du produit.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="etape-1" class="bg-bgSecondary px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="mb-10 text-3xl font-bold text-primary sm:text-4xl">
+          Installation de l’environnement nRF Connect
+        </h2>
+
+        <div class="max-w-4xl space-y-10">
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">
+              Installer nRF Connect sur Visual Studio Code
+            </h3>
+            <div class="space-y-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <p>Installer “nRF Connect for VS Code Extension Pack” et “nRF Connect for VS Code”.</p>
+              <p>Faire tous les téléchargements demandés.</p>
+              <ul class="list-disc space-y-3 pl-5">
+                <li>Installer “nRF Connect for VS Code Extension Pack”.</li>
+                <li>Installer “nRF Connect for VS Code”.</li>
+                <li>Faire tous les téléchargements demandés.</li>
+              </ul>
+            </div>
+            <img src="./ressources/nRF/nRF_1.png" alt="Capture de l'environnement nRF Connect" class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg" />
+          </div>
+
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Créer une application (projet)</h3>
+            <div class="space-y-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <ul class="list-disc space-y-3 pl-5">
+                <li>
+                  Créer une nouvelle application, soit à partir d’un exemple, soit à partir d’un document vierge,
+                  via le bouton de l’onglet “Welcome” : “Create a new application”.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Compiler et flasher</h3>
+            <div class="space-y-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <ul class="list-disc space-y-3 pl-5">
+                <li>
+                  Ajouter une configuration de build avec :
+                  <ul class="mt-2 list-[circle] space-y-2 pl-6">
+                    <li>Board target : Nordic SoC - ubx_evkannab1/nrf52832 (spécifique à chaque microcontrôleur ou carte)</li>
+                    <li>Le reste ne change rien</li>
+                  </ul>
+                </li>
+                <li>Venir faire les modifications dans le fichier main.c, situé dans le dossier source du workspace.</li>
+                <li>Dans “Applications”, à côté du nom du projet, cliquer sur “Build all configurations for application”.</li>
+                <li>Pour programmer, dans l’onglet “Actions”, cliquer sur “Flash”.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="etape-2" class="bg-white px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="mb-6 text-3xl font-bold text-primary sm:text-4xl">Faire clignoter une LED</h2>
+
+        <p class="mb-4 max-w-4xl text-base leading-relaxed text-gray-700 sm:text-lg">
+          Pour savoir quelle GPIO du ANNA-B112 utiliser pour la LED, on retrouve dans la datasheet
+          l’information suivante :
+        </p>
+
+        <img src="./ressources/nRF/nRF_2.png" alt="Schéma de la LED sur le module ANNA-B112" class="my-6 h-auto w-full max-w-xl rounded-xl shadow-lg" />
+
+        <p class="mb-4 max-w-4xl text-base leading-relaxed text-gray-700 sm:text-lg">
+          On peut donc observer que la LED est branchée sur les IO_29, IO_30 et IO_31.
+        </p>
+
+        <p class="mb-4 max-w-4xl text-base leading-relaxed text-gray-700 sm:text-lg">
+          On peut alors écrire le code suivant dans le fichier main.c afin de faire clignoter
+          la LED de la carte.
+        </p>
+
+        <p class="mb-4 max-w-4xl text-base leading-relaxed text-gray-700 sm:text-lg">
+          Attention : dans le code, on travaille avec l’appellation “nRF52 port”, qui correspond au
+          numéro de sortie de la puce nRF à l’intérieur du boîtier. Le numéro GPIO correspond au
+          numéro de sortie du boîtier nommé par ublox, qui n’est pas le même que celui du nRF.
+        </p>
+
+        <p class="mb-4 max-w-4xl text-base leading-relaxed text-gray-700 sm:text-lg">
+          Donc, comme vu plus haut, je veux faire clignoter la LED bleue, qui est la GPIO 31.
+          Je dois alors renseigner le numéro 26 dans le code, comme indiqué dans la datasheet
+          ci-dessous.
+        </p>
+
+        <img src="./ressources/nRF/nRF_3.png" alt="Table de correspondance GPIO nRF" class="my-6 h-auto w-full max-w-xl rounded-xl shadow-lg" />
+
+        <p class="mb-4 max-w-4xl text-base leading-relaxed text-gray-700 sm:text-lg">
+          Le code main ci-dessous fait clignoter la LED bleue toutes les secondes.
+        </p>
+
+        <div class="mt-8 mb-8 rounded-xl border border-gray-200 bg-gray-900 p-4 shadow-lg">
+          <div class="mb-3 flex items-center justify-between">
+            <span class="text-sm font-semibold text-gray-300">main.c</span>
+            <span class="rounded bg-gray-700 px-2 py-1 text-xs text-gray-200">C</span>
+          </div>
+
+          <pre class="overflow-x-auto rounded-lg text-sm leading-relaxed"><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;zephyr/kernel.h&gt;
+#include &lt;zephyr/drivers/gpio.h&gt;
+
+/* GPIO pin number for the LED */
+#define GPIO_PIN 26
+
+/* Récupère le contrôleur GPIO gpio0 de ma carte
+* et stocke sa référence dans la variable gpio0
+*/
+static const struct device *gpio0 =
+    DEVICE_DT_GET(DT_NODELABEL(gpio0));
+
+int main(void)
+{
+    if (!device_is_ready(gpio0)) {
+        return 0;
+    }
+
+    if (gpio_pin_configure(gpio0, GPIO_PIN, GPIO_OUTPUT_INACTIVE) &lt; 0) {
+        return 0;
+    }
+
+    while (1) {
+        gpio_pin_toggle(gpio0, GPIO_PIN);
+        k_msleep(1000);
+    }
+
+    return 0;
+}
+      </code></pre>
+        </div>
+
+        <p class="mb-4 max-w-4xl text-base leading-relaxed text-gray-700 sm:text-lg">
+          Il est nécéssaire de configurer le projet pour utiliser les GPIOs. Pour cela, il faut ajouter la ligne suivante dans le fichier prj.conf :
+        </p>
+
+        <div class="mt-8 mb-8 rounded-xl border border-gray-200 bg-gray-900 p-4 shadow-lg">
+          <div class="mb-3 flex items-center justify-between">
+            <span class="text-sm font-semibold text-gray-300">prj.conf</span>
+            <span class="rounded bg-gray-700 px-2 py-1 text-xs text-gray-200">Conf</span>
+          </div>
+          <pre class="overflow-x-auto rounded-lg text-sm leading-relaxed"><code class="language-c">
+// To use the GPIOs
+CONFIG_GPIO=y
+      </code></pre>
+        </div>
+
+
+      </div>
+    </section>
+
+      <section id="etape-3" class="bg-bgSecondary px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="mb-10 text-3xl font-bold text-primary sm:text-4xl">Bluetooth Low Energy</h2>
+
+        <article class="max-w-4xl space-y-10 text-base leading-relaxed text-gray-700 sm:text-lg">
+          <div>
+            <h3 id="ble-resume" class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Résumé du Bluetooth Low Energy (BLE)</h3>
+            <p>
+              Le <strong>Bluetooth Low Energy (BLE)</strong> est une technologie de communication radio sans fil conçue pour permettre l’échange de petites quantités de données tout en consommant très peu d’énergie. Contrairement au Bluetooth classique, qui est optimisé pour des flux continus de données (audio, par exemple), le BLE est destiné aux appareils fonctionnant sur batterie pendant plusieurs mois ou plusieurs années, comme les capteurs, balances connectées, montres ou dispositifs médicaux.
+            </p>
+            <p class="mt-4">Le fonctionnement du BLE repose sur deux mécanismes principaux :</p>
+            <ul class="mt-3 list-disc space-y-2 pl-6">
+              <li>l’<strong>advertising</strong> (publicité) ;</li>
+              <li>les connexions et les échanges de données via le protocole <strong>GATT</strong>.</li>
+            </ul>
+          </div>
+
+          <div>
+  <h3 id="ble-advertising" class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Advertising</h3>
+
+  <p>
+    L’<strong>advertising</strong> correspond à l’émission périodique de paquets de données BLE appelés
+    <em>advertising packets</em>.
+  </p>
+
+  <p class="mt-4">
+    Un appareil BLE qui diffuse ces paquets est appelé un <strong>advertiser</strong>.
+  </p>
+
+  <p class="mt-4">
+    Ces paquets permettent :
+  </p>
+
+  <ul class="mt-3 list-disc space-y-2 pl-6">
+    <li>d’annoncer la présence d’un appareil à proximité ;</li>
+    <li>de transmettre certaines informations ;</li>
+    <li>d’indiquer si une connexion est autorisée ou non.</li>
+  </ul>
+
+  <p class="mt-4">
+    Les appareils situés à proximité effectuent un <strong>scan</strong> afin de détecter et de recevoir ces paquets.
+  </p>
+
+  <p class="mt-4">
+    L’un des principaux avantages de l’advertising est qu’il permet de transmettre des informations sans nécessairement établir une connexion BLE.
+  </p>
+
+  <h4 class="mt-6 mb-3 text-xl font-bold text-primary sm:text-2xl">Exemple</h4>
+
+  <p>
+    Une balance connectée peut diffuser périodiquement son poids dans ses données d’advertising.
+    Un smartphone ou une passerelle BLE peut alors récupérer cette information simplement en effectuant un scan.
+  </p>
+
+  <p class="mt-4">
+    Le smartphone lit les données reçues puis attend le prochain paquet d’advertising pour obtenir une nouvelle mesure.
+  </p>
+
+  <h3 id="ble-advertising-types" class="mt-8 mb-4 text-2xl font-bold text-primary sm:text-3xl">
+    Advertising connectable et non connectable
+  </h3>
+
+  <p>
+    Il existe plusieurs types d’advertising selon que l’appareil autorise ou non l’établissement d’une connexion BLE.
+  </p>
+
+  <h4 class="mt-6 mb-3 text-xl font-bold text-primary sm:text-2xl">
+    Advertising connectable
+  </h4>
+
+  <p>
+    Dans ce mode, l’appareil diffuse des paquets d’advertising et accepte les demandes de connexion provenant d’un appareil central, comme un smartphone.
+  </p>
+
+  <p class="mt-4">
+    Ce mode est généralement utilisé lorsqu’un échange de données via des services GATT est nécessaire.
+  </p>
+
+  <p class="mt-4">
+    Exemple : une montre connectée ou un capteur dont les mesures sont lues via une connexion BLE.
+  </p>
+
+  <h4 class="mt-6 mb-3 text-xl font-bold text-primary sm:text-2xl">
+    Advertising non connectable
+  </h4>
+
+  <p>
+    Dans ce mode, l’appareil diffuse uniquement ses données d’advertising et refuse toute tentative de connexion.
+  </p>
+
+  <p class="mt-4">
+    Les informations doivent donc être directement incluses dans le paquet d’advertising.
+  </p>
+
+  <p class="mt-4">
+    Exemples :
+  </p>
+
+  <ul class="mt-3 list-disc space-y-2 pl-6">
+    <li>balise Beacon ;</li>
+    <li>capteur de température transmettant périodiquement une mesure ;</li>
+    <li>balance diffusant uniquement son poids.</li>
+  </ul>
+
+  <p class="mt-4">
+    L’absence de connexion réduit le temps d’activation de la radio Bluetooth, ce qui permet généralement de diminuer la consommation d’énergie et d’augmenter l’autonomie du système.
+  </p>
+</div>
+
+          <div>
+            <h3 id="ble-connexion" class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Connexion BLE</h3>
+            <p>Lorsque davantage de données doivent être échangées, un appareil peut établir une connexion.</p>
+            <p class="mt-4">On distingue alors :</p>
+            <ul class="mt-3 list-disc space-y-2 pl-6">
+              <li>le <strong>Peripheral</strong> (balance, capteur, etc.) ;</li>
+              <li>le <strong>Central</strong> (smartphone, ordinateur, passerelle, etc.).</li>
+            </ul>
+            <p class="mt-4">La séquence devient :</p>
+            <div class="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 font-semibold text-gray-800" aria-label="Séquence de connexion BLE">
+              <span>Advertising</span>
+              <span class="text-primary" aria-hidden="true">→</span>
+              <span>Connexion</span>
+              <span class="text-primary" aria-hidden="true">→</span>
+              <span>Échange de données</span>
+              <span class="text-primary" aria-hidden="true">→</span>
+              <span>Déconnexion</span>
+            </div>
+            <p class="mt-4">Une fois la connexion établie, les données ne transitent plus par les paquets d’advertising mais via le protocole <strong>GATT</strong>.</p>
+          </div>
+
+          <div>
+            <h3 id="ble-gatt" class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Le protocole GATT</h3>
+            <p><strong>GATT (Generic Attribute Profile)</strong> est la couche du BLE qui définit comment les données sont organisées et échangées après l’établissement d’une connexion.</p>
+            <p class="mt-4">GATT repose sur une structure hiérarchique :</p>
+            <ul class="mt-3 list-disc space-y-2 pl-6">
+              <li>Service
+                <ul class="mt-2 list-[circle] space-y-2 pl-6">
+                  <li>Characteristic 1</li>
+                  <li>Characteristic 2</li>
+                  <li>Characteristic 3</li>
+                </ul>
+              </li>
+            </ul>
+
+            <h4 id="ble-services" class="mt-8 mb-3 text-xl font-bold text-primary sm:text-2xl">Les services</h4>
+            <p>Un <strong>service</strong> regroupe des fonctionnalités similaires.</p>
+            <p class="mt-4">Quelques exemples :</p>
+            <ul class="mt-3 list-disc space-y-2 pl-6">
+              <li>Battery Service ;</li>
+              <li>Heart Rate Service ;</li>
+              <li>Device Information Service.</li>
+            </ul>
+            <p class="mt-4">On peut également créer des <strong>services personnalisés</strong>.</p>
+            <p class="mt-4">Dans le cas d’une balance :</p>
+            <p class="mt-3 font-semibold text-gray-800">Weight Service</p>
+
+            <h4 id="ble-characteristics" class="mt-8 mb-3 text-xl font-bold text-primary sm:text-2xl">Les caractéristiques (Characteristics)</h4>
+            <p>Les caractéristiques contiennent les données.</p>
+            <ul class="mt-3 list-disc space-y-2 pl-6">
+              <li>Weight Service
+                <ul class="mt-2 list-[circle] space-y-2 pl-6">
+                  <li>Weight Characteristic</li>
+                  <li>Battery Characteristic</li>
+                </ul>
+              </li>
+            </ul>
+            <p class="mt-4">Une caractéristique peut :</p>
+            <ul class="mt-3 list-disc space-y-2 pl-6">
+              <li>être lue (<em>Read</em>) ;</li>
+              <li>être écrite (<em>Write</em>) ;</li>
+              <li>notifier automatiquement une nouvelle valeur (<em>Notify</em>).</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 id="ble-gatt-example" class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Exemple de communication GATT</h3>
+            <ol class="list-decimal space-y-2 pl-6">
+              <li>La balance fait de l’advertising.</li>
+              <li>Le smartphone la détecte.</li>
+              <li>Le smartphone se connecte.</li>
+              <li>Le smartphone découvre les services GATT.</li>
+              <li>Il lit la caractéristique contenant le poids.</li>
+              <li>La connexion est fermée.</li>
+            </ol>
+          </div>
+
+          <div>
+            <h3 id="ble-energy" class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Pourquoi ne pas utiliser GATT peut économiser de l’énergie ?</h3>
+            <p>Dans une application où il faut simplement envoyer une valeur de poids puis retourner en veille, le protocole GATT apporte peu d’avantages.</p>
+            <p class="mt-4">Pour utiliser GATT, il faut :</p>
+            <ol class="mt-3 list-decimal space-y-2 pl-6">
+              <li>diffuser de l’advertising ;</li>
+              <li>attendre une connexion ;</li>
+              <li>établir la connexion ;</li>
+              <li>découvrir les services ;</li>
+              <li>échanger les données ;</li>
+              <li>maintenir les événements de connexion ;</li>
+              <li>se déconnecter.</li>
+            </ol>
+            <p class="mt-4">Toutes ces opérations nécessitent l’activation de la radio pendant une durée plus importante quiconsomme de l’énergie.</p>
+            <p>Dans le cas d’un capteur de pesée alimenté par batterie qui doit simplement transmettre une valeur puis retourner en veille, <strong>l’utilisation d’un advertising non connectable est généralement la solution la plus économe en énergie</strong>. Le smartphone ou le récepteur n’a qu’à scanner périodiquement les paquets BLE pour récupérer le poids. Il n’est alors plus nécessaire de gérer une connexion, des services GATT ou des caractéristiques, ce qui réduit considérablement le temps pendant lequel la radio BLE reste active et augmente l’autonomie du système.</p>
+          </div>
+
+          <div>
+            <h3 id="ble-code-advertising" class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Code pour de l'advertising non connectable</h3>
+            Ce code utilise alors le BLE en mode advertising non connectable pour diffuser le poids mesuré à tous les appareils en mode serveur BLE en écoute à proximité.
+            <div class="mt-8 mb-8 rounded-xl border border-gray-200 bg-gray-900 p-4 shadow-lg">
+          <div class="mb-3 flex items-center justify-between">
+            <span class="text-sm font-semibold text-gray-300">main.c</span>
+            <span class="rounded bg-gray-700 px-2 py-1 text-xs text-gray-200">C</span>
+          </div>
+
+          <pre class="overflow-x-auto rounded-lg text-sm leading-relaxed"><code class="language-c">
+/* Bibliothèques Zephyr */
+#include &lt;zephyr/kernel.h&gt;
+#include &lt;zephyr/sys/printk.h&gt;
+
+/* Bibliothèques Bluetooth */
+#include &lt;zephyr/bluetooth/bluetooth.h&gt;
+#include &lt;zephyr/bluetooth/hci.h&gt;
+
+/* Structure envoyée dans l'advertising */
+struct adv_weight {
+	uint16_t company_id;
+	uint16_t weight;
+} __packed;
+
+/* Données initiales */
+static struct adv_weight adv_weight_data = {
+	.company_id = 0xFFAA,
+	.weight = 0x6769
+};
+
+/* Callback appelée après l'initialisation Bluetooth */
+static void bt_ready(int err)
+{
+	/* Vérification de l'initialisation */
+	if (err) {
+		printk("Bluetooth init failed (err %d)\n", err);
+		return;
+	}
+
+	printk("Bluetooth initialized\n");
+}
+
+int main(void)
+{
+	int err;
+
+	/* Poids mesuré en kg */
+	double weight = 2.13;
+
+	/* Conversion en entier (2 décimales) */
+	adv_weight_data.weight = (uint16_t)(weight * 100);
+
+	printk("Weight = %.2f kg\n", weight);
+
+	/* Démarrage de la pile Bluetooth */
+	err = bt_enable(bt_ready);
+
+	/* Vérification du démarrage */
+	if (err) {
+		printk("Bluetooth init failed (err %d)\n", err);
+		return 0;
+	}
+
+	/* Attente de stabilisation */
+	k_sleep(K_MSEC(500));
+
+	/* Données à diffuser */
+	struct bt_data ad[] = {
+
+		/* Flags BLE */
+		BT_DATA_BYTES(
+			BT_DATA_FLAGS,
+			BT_LE_AD_GENERAL |
+			BT_LE_AD_NO_BREDR
+		),
+
+		/* Données constructeur */
+		BT_DATA(
+			BT_DATA_MANUFACTURER_DATA,
+			&adv_weight_data,
+			sizeof(adv_weight_data)
+		),
+	};
+
+	/* Démarrage de l'advertising non connectable */
+	err = bt_le_adv_start(
+		BT_LE_ADV_NCONN,
+		ad,
+		ARRAY_SIZE(ad),
+		NULL,
+		0
+	);
+
+	/* Vérification du démarrage */
+	if (err) {
+		printk("Advertising failed (err %d)\n", err);
+		return 0;
+	}
+
+	printk("Advertising started\n");
+
+	/* Diffusion pendant 5 secondes */
+	k_sleep(K_SECONDS(5));
+
+	/* Arrêt de l'advertising */
+	bt_le_adv_stop();
+
+	printk("Advertising stopped\n");
+
+	/* Attente infinie */
+	while (1) {
+		k_sleep(K_FOREVER);
+	}
+
+	return 0;
+}
+      </code></pre>
+        </div>
+
+        <div class="mt-8 rounded-xl border border-gray-200 bg-gray-900 p-4 shadow-lg">
+          <div class="mb-3 flex items-center justify-between">
+            <span class="text-sm font-semibold text-gray-300">prj.conf</span>
+            <span class="rounded bg-gray-700 px-2 py-1 text-xs text-gray-200">Conf</span>
+          </div>
+          <pre class="overflow-x-auto rounded-lg text-sm leading-relaxed"><code class="language-c">
+CONFIG_BT=y
+CONFIG_BT_PERIPHERAL=y
+
+      </code></pre>
+        </div>
+        <p class="mt-4">On observe sur la capture d'écran ci-dessous de l'application nRF Connect, l'ID de l'appareil ainsi que les données du poids transmis en hexadécimal 0xD500 = 213 (2.13kg) (le code hex est inversé sur l'application nRF Connect, donc si c'est marqué 0x6769, en réalité c'est 0x6967).</p>
+        <img src="./ressources/nRF/nRF_4.png" alt="Schéma de la LED sur le module ANNA-B112" class="my-6 h-auto w-full max-w-xl rounded-xl shadow-lg" />
+
+          </div>
+
+        </article>
+      </div>
+        <div class="max-w-4xl px-4 py-16 md:py-20">
+            <h3 id="ble-code-gatt" class="mb-4 text-2xl font-bold text-primary sm:text-3xl">Code pour le BLE avec le protocole GATT</h3>
+            Ce code utilise alors le BLE avec le protocole GATT et le UUID du service Weight Scale standard.
+            <div class="mt-8 mb-8 rounded-xl border border-gray-200 bg-gray-900 p-4 shadow-lg">
+          <div class="mb-3 flex items-center justify-between">
+            <span class="text-sm font-semibold text-gray-300">main.c</span>
+            <span class="rounded bg-gray-700 px-2 py-1 text-xs text-gray-200">C</span>
+          </div>
+
+          <pre class="overflow-x-auto rounded-lg text-sm leading-relaxed"><code class="language-c">
+/* Bibliothèques Zephyr */
+#include &lt;zephyr/kernel.h&gt;
+#include &lt;zephyr/sys/printk.h&gt;
+
+/* Bibliothèques Bluetooth */
+#include &lt;zephyr/bluetooth/bluetooth.h&gt;
+#include &lt;zephyr/bluetooth/gatt.h&gt;
+#include &lt;zephyr/bluetooth/uuid.h&gt;
+#include &lt;zephyr/bluetooth/conn.h&gt;
+
+/* UUID du service Weight Scale standard */
+#define BT_UUID_WEIGHT_SCALE_SERVICE \
+	BT_UUID_DECLARE_16(0x181D)
+
+/* UUID de la caractéristique Weight Measurement */
+#define BT_UUID_WEIGHT_SCALE_MEASUREMENT \
+	BT_UUID_DECLARE_16(0x2A9D)
+
+/* Structure contenant une mesure de poids */
+struct weight_measurement {
+	uint8_t flags;
+	uint16_t weight;
+} __packed;
+
+/* Valeur initiale de la mesure */
+static struct weight_measurement weight_meas = {
+	.flags = 0x00,
+	.weight = 0x00
+};
+
+/* Fonction appelée lors d'une lecture GATT */
+static ssize_t read_weight(
+	struct bt_conn *conn,
+	const struct bt_gatt_attr *attr,
+	void *buf,
+	uint16_t len,
+	uint16_t offset)
+{
+	/* Récupération de la mesure stockée */
+	const struct weight_measurement *value =
+		attr->user_data;
+
+	/* Copie de la mesure vers le client BLE */
+	return bt_gatt_attr_read(
+		conn,
+		attr,
+		buf,
+		len,
+		offset,
+		value,
+		sizeof(*value)
+	);
+}
+
+/* Déclaration du service GATT Weight Scale */
+BT_GATT_SERVICE_DEFINE(weight_service,
+
+	/* Service principal */
+	BT_GATT_PRIMARY_SERVICE(
+		BT_UUID_WEIGHT_SCALE_SERVICE
+	),
+
+	/* Caractéristique contenant le poids */
+	BT_GATT_CHARACTERISTIC(
+		BT_UUID_WEIGHT_SCALE_MEASUREMENT,
+		BT_GATT_CHRC_READ |
+		BT_GATT_CHRC_NOTIFY,
+		BT_GATT_PERM_READ,
+		read_weight,
+		NULL,
+		&weight_meas
+	),
+
+	/* Autorise l'activation des notifications */
+	BT_GATT_CCC(
+		NULL,
+		BT_GATT_PERM_READ |
+		BT_GATT_PERM_WRITE
+	)
+);
+
+/* Appelée lorsqu'un appareil se connecte */
+static void connected(
+	struct bt_conn *conn,
+	uint8_t err)
+{
+	/* Vérification de la connexion */
+	if (err) {
+		printk(
+			"Connection failed (err %u)\n",
+			err
+		);
+		return;
+	}
+
+	printk("Connected\n");
+}
+
+/* Appelée lorsqu'un appareil se déconnecte */
+static void disconnected(
+	struct bt_conn *conn,
+	uint8_t reason)
+{
+	printk(
+		"Disconnected (reason %u)\n",
+		reason
+	);
+}
+
+/* Enregistrement des callbacks de connexion */
+BT_CONN_CB_DEFINE(conn_callbacks) = {
+	.connected = connected,
+	.disconnected = disconnected,
+};
+
+/* Données d'advertising */
+static const struct bt_data ad[] = {
+
+	/* Flags BLE */
+	BT_DATA_BYTES(
+		BT_DATA_FLAGS,
+		(BT_LE_AD_GENERAL |
+		 BT_LE_AD_NO_BREDR)
+	),
+
+	/* Nom complet de l'appareil */
+	BT_DATA(
+		BT_DATA_NAME_COMPLETE,
+		CONFIG_BT_DEVICE_NAME,
+		sizeof(CONFIG_BT_DEVICE_NAME) - 1
+	),
+};
+
+/* Fonction appelée après l'initialisation Bluetooth */
+static void bt_ready(int err)
+{
+	/* Vérification de l'initialisation */
+	if (err) {
+		printk(
+			"Bluetooth init failed "
+			"(err %d)\n",
+			err
+		);
+		return;
+	}
+
+	printk("Bluetooth initialized\n");
+
+	/* Démarrage de l'advertising connectable */
+	err = bt_le_adv_start(
+		BT_LE_ADV_CONN_FAST_1,
+		ad,
+		ARRAY_SIZE(ad),
+		NULL,
+		0
+	);
+
+	/* Vérification du démarrage */
+	if (err) {
+
+		printk(
+			"Advertising failed "
+			"(err %d)\n",
+			err
+		);
+
+		return;
+	}
+
+	printk(
+		"Advertising started\n"
+	);
+}
+
+/* Point d'entrée du programme */
+int main(void)
+{
+	int err;
+
+	/* Message de démarrage */
+	printk(
+		"Starting Weight Scale...\n"
+	);
+
+	/* Initialisation de la pile Bluetooth */
+	err = bt_enable(bt_ready);
+
+	/* Vérification du démarrage */
+	if (err) {
+
+		printk(
+			"Bluetooth init failed "
+			"(err %d)\n",
+			err
+		);
+
+		return 0;
+	}
+
+	/* Poids simulé en kg */
+	double weight = 2.13;
+
+	/* Somme des poids envoyés */
+	double weight_tosend = 0;
+
+	while (1) {
+
+		/* Ajout d'un poids à chaque cycle */
+		weight_tosend = weight_tosend + weight;
+
+		/* Conversion selon la résolution Weight Scale */
+		weight_meas.weight =
+			(uint16_t)(weight_tosend / 0.005);
+
+		/* Affichage de la valeur actuelle */
+		printk(
+			"Weight : %d.%d kg\n",
+			weight_meas.weight / 10,
+			weight_meas.weight % 10
+		);
+
+		/* Envoi d'une notification aux clients connectés */
+		err = bt_gatt_notify(
+			NULL,
+			&weight_service.attrs[2],
+			&weight_meas,
+			sizeof(weight_meas)
+		);
+
+		/* Vérification de l'envoi */
+		if (err) {
+
+			printk(
+				"Notify failed "
+				"(err %d)\n",
+				err
+			);
+
+		} else {
+
+			printk(
+				"Weight sent\n"
+			);
+		}
+
+		/* Attente avant la prochaine mesure */
+		k_sleep(
+			K_SECONDS(2)
+		);
+	}
+
+	return 0;
+}
+      </code></pre>
+        </div>
+
+        <div class="mt-8 rounded-xl border border-gray-200 bg-gray-900 p-4 shadow-lg">
+          <div class="mb-3 flex items-center justify-between">
+            <span class="text-sm font-semibold text-gray-300">prj.conf</span>
+            <span class="rounded bg-gray-700 px-2 py-1 text-xs text-gray-200">Conf</span>
+          </div>
+          <pre class="overflow-x-auto rounded-lg text-sm leading-relaxed"><code class="language-c">
+CONFIG_BT=y
+CONFIG_BT_PERIPHERAL=y
+
+CONFIG_BT_DEVICE_NAME="BeeDevice"
+CONFIG_BT_DEVICE_APPEARANCE=313
+
+CONFIG_BT_GATT_DYNAMIC_DB=n
+      </code></pre>
+        </div>
+        <p class="mt-4">On observe sur la captre d'écran ci-dessous de l'application nRF Connect, l'appareil BeeDevice bien connecté avec le Weight Measurement et sa valeur.</p>
+
+        <img src="./ressources/nRF/nRF_5.png" alt="Schéma de la LED sur le module ANNA-B112" class="my-6 h-auto w-full max-w-xl rounded-xl shadow-lg" />
+
+          </div>
+
+        </article>
+      </div>
+    </section>  
+
+        <section id="etape-4" class="bg-white px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="mb-6 text-3xl font-bold text-primary sm:text-4xl">Communication I2C</h2>
+
+        <p class="mb-4 max-w-4xl text-base leading-relaxed text-gray-700 sm:text-lg">
+          Explications
+        </p>
+
+        <img src="./ressources/nRF/nRF_2.png" alt="Schéma de la LED sur le module ANNA-B112" class="my-6 h-auto w-full max-w-xl rounded-xl shadow-lg" />
+
+        <div class="mt-8 rounded-xl border border-gray-200 bg-gray-900 p-4 shadow-lg">
+          <div class="mb-3 flex items-center justify-between">
+            <span class="text-sm font-semibold text-gray-300">main.c</span>
+            <span class="rounded bg-gray-700 px-2 py-1 text-xs text-gray-200">C</span>
+          </div>
+          <pre class="overflow-x-auto rounded-lg text-sm leading-relaxed"><code class="language-c">
+// Code
+      </code></pre>
+        </div>
+
+
+      </div>
+    </section>
+
+
+
+
+
+
+
+  </main>
+
+  <footer class="border-t bg-white px-4 py-10 text-center">
+    <p class="font-semibold text-primary">Electro-note</p>
+    <p class="mt-2 text-sm text-gray-500">Carnet de projets électroniques</p>
+  </footer>
+
+  <script>
+    const sections = [...document.querySelectorAll('main section[id]')];
+    const topicLinks = [...document.querySelectorAll('.topic-link')];
+    const progressBars = [document.querySelector('#reading-progress'), document.querySelector('#mobile-reading-progress')];
+    const progressLabels = [document.querySelector('#reading-progress-label'), document.querySelector('#mobile-reading-progress-label')];
+
+    function updateReadingProgress() {
+      const pageHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = pageHeight > 0 ? Math.min(100, Math.round((window.scrollY / pageHeight) * 100)) : 0;
+
+      progressBars.forEach((bar) => {
+        if (bar) bar.style.width = `${progress}%`;
+      });
+      progressLabels.forEach((label) => {
+        if (label) label.textContent = progress;
+      });
+    }
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        topicLinks.forEach((link) => link.classList.toggle('active', link.dataset.section === entry.target.id));
+      });
+    }, { rootMargin: '-20% 0px -65% 0px' });
+
+    sections.forEach((section) => sectionObserver.observe(section));
+    window.addEventListener('scroll', updateReadingProgress, { passive: true });
+    updateReadingProgress();
+  </script>
+</body>
+</html>

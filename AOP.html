@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="fr" style="scroll-behavior: smooth;">
+  <link
+  href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css"
+  rel="stylesheet"
+/>
+
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-c.min.js"></script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AOP | Electro-note</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          primary: '#3b7cae',
+          secondary: '#3b7cae',
+          bgPrimary: '#ffffff',
+          bgSecondary: '#f3f4f6',
+        },
+      },
+    };
+  </script>
+  <style>
+
+    tr th,
+    tr td {
+      border: 1px solid #e6e6e6;
+    }
+
+    tr th {
+      background-color: #f5f5f5;
+    }
+
+    .topic-link.active {
+      color: #3b7cae;
+      background: #eff6fb;
+      font-weight: 700;
+    }
+
+    .topic-link.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+      bottom: 0.5rem;
+      width: 3px;
+      border-radius: 999px;
+      background: #3b7cae;
+    }
+  </style>
+</head>
+
+<body class="bg-bgPrimary text-gray-900">
+  <header class="fixed left-0 top-0 z-[10000] w-full border-b bg-white shadow-sm">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="./ressources/Index/Logo_ElectroSite.png" alt="Logo Electro-note" class="h-12 w-auto" />
+        <span class="text-xl font-bold text-primary">Electro-note</span>
+      </a>
+      <a href="index.html#Sujets" class="rounded-full border border-primary px-4 py-2 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">
+        Tous les sujets
+      </a>
+    </div>
+  </header>
+
+  <aside class="fixed bottom-0 left-0 top-20 z-40 hidden w-64 overflow-y-auto border-r bg-white/95 px-5 py-8 shadow-sm backdrop-blur md:block" aria-label="Navigation de la page">
+    <div class="flex h-full flex-col">
+      <div class="mb-8">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-gray-500">Sommaire</p>
+        <div class="mt-4 h-1.5 overflow-hidden rounded-full bg-gray-200" aria-hidden="true">
+          <div id="reading-progress" class="h-full w-0 rounded-full bg-primary transition-[width] duration-150"></div>
+        </div>
+        <p class="mt-2 text-xs text-gray-500"><span id="reading-progress-label">0</span> % parcouru</p>
+      </div>
+
+      <nav class="space-y-1" aria-label="Topics nRF">
+        <a href="#introduction" data-section="introduction" class="topic-link active relative block rounded-r-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-primary">Introduction</a>
+        <a href="#suiveur" data-section="suiveur" class="topic-link relative block rounded-r-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-primary">Suiveur de tension</a>
+        <a href="#inverseur" data-section="inverseur" class="topic-link relative block rounded-r-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-primary">Amplificateur inverseur</a>
+        <a href="#non-inverseur" data-section="non-inverseur" class="topic-link relative block rounded-r-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-primary">Amplificateur non inverseur</a>
+        <a href="#additionneur" data-section="additionneur" class="topic-link relative block rounded-r-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-primary">Additionneur</a>
+        <a href="#soustracteur" data-section="soustracteur" class="topic-link relative block rounded-r-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-primary">Soustracteur</a>
+        <a href="#comparateur-simple" data-section="comparateur-simple" class="topic-link relative block rounded-r-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-primary">Comparateur simple</a>
+        <a href="#comparateur-hysteresis" data-section="comparateur-hysteresis" class="topic-link relative block rounded-r-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-primary">Comparateur à hystérésis</a>
+        <a href="#photodiode" data-section="photodiode" class="topic-link relative block rounded-r-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-primary">Photodiode</a>
+      </nav>
+
+      <a href="#top" class="mt-auto text-sm font-semibold text-primary hover:underline">Retour en haut ↑</a>
+    </div>
+  </aside>
+
+  <div class="sticky top-20 z-30 border-b bg-white px-4 py-3 shadow-sm md:hidden">
+    <div class="mb-2 flex items-center justify-between text-xs font-semibold text-gray-500">
+      <span>Navigation</span>
+      <span><span id="mobile-reading-progress-label">0</span> %</span>
+    </div>
+    <div class="mb-3 h-1.5 overflow-hidden rounded-full bg-gray-200" aria-hidden="true">
+      <div id="mobile-reading-progress" class="h-full w-0 rounded-full bg-primary transition-[width] duration-150"></div>
+    </div>
+    <nav class="flex gap-2 overflow-x-auto pb-1" aria-label="Navigation mobile des topics nRF">
+      <a href="#introduction" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Introduction</a>
+      <a href="#suiveur" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Suiveur</a>
+      <a href="#inverseur" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Inverseur</a>
+      <a href="#non-inverseur" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Non inverseur</a>
+      <a href="#additionneur" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Additionneur</a>
+      <a href="#soustracteur" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Soustracteur</a>
+      <a href="#comparateur-simple" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Comparateur</a>
+      <a href="#photodiode" class="whitespace-nowrap rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600">Photodiode</a>
+    </nav>
+  </div>
+
+  <main id="top" class="pt-24 md:pl-64">
+    <section class="bg-bgSecondary px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl text-center">
+        <h1 class="text-4xl font-bold leading-tight text-primary sm:text-5xl lg:text-6xl">Nordic nRF</h1>
+      </div>
+    </section>
+
+    <section id="introduction" class="bg-white px-4 py-16 md:py-20">
+  <div class="mx-auto max-w-6xl">
+    <h2
+      class="mb-10 text-center text-3xl font-bold text-primary sm:text-4xl md:text-left"
+    >
+      Introduction
+    </h2>
+
+      <!-- Fonctionnement en boucle ouverte -->
+      <div class="space-y-4">
+        <h3 class="text-2xl font-semibold text-gray-900">
+          Fonctionnement en boucle ouverte
+        </h3>
+
+        <p class="text-base leading-relaxed text-gray-700 sm:text-lg">
+          En boucle ouverte (BO), l'AOP fonctionne avec une entrée
+          différentielle.
+        </p>
+
+        <img
+          src="./ressources/AOP/AOP_1.png"
+          alt="Schéma d'un amplificateur opérationnel en boucle ouverte"
+          class="my-6 h-auto w-full max-w-sm rounded-xl shadow-lg"
+        />
+
+        <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+          <p class="font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+            ε = Vd = V+ − V−
+          </p>
+
+          <p class="mt-2 font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+            Vs = Av₀ × ε
+          </p>
+
+          <p class="mt-2 text-sm text-gray-600 sm:text-base">
+            avec
+            <span class="font-mono font-semibold">Av₀ &gt; 1.000.000</span>
+            pour un AOP réel.
+          </p>
+        </div>
+      </div>
+
+      <!-- Saturation et zone linéaire -->
+      <div class="space-y-4">
+        <h3 class="text-2xl font-semibold text-gray-900">
+          Saturation et zone de fonctionnement linéaire
+        </h3>
+
+        <p class="text-base leading-relaxed text-gray-700 sm:text-lg">
+          Les tensions de saturation
+          <span class="font-mono">V<sub>SAT−</sub></span> (-V<sub>CC</sub>) et
+          <span class="font-mono">V<sub>SAT+</sub></span> (V<sub>CC</sub>)
+          définissent les tensions maximales et minimales que peut atteindre
+          la sortie de l'AOP.
+        </p>
+
+        <ul class="list-disc space-y-3 pl-6 text-base leading-relaxed text-gray-700 sm:text-lg">
+          <li>
+            Entre les deux tensions de saturation, l'AOP fonctionne en
+            <strong>régime linéaire</strong>.
+          </li>
+
+          <li>
+            La zone de fonctionnement linéaire en entrée est donnée
+            approximativement par :
+            <span class="ml-1 font-mono">
+              [V<sub>SAT−</sub> / Av₀ ; V<sub>SAT+</sub> / Av₀]
+            </span>
+          </li>
+
+          <li>
+            Cette plage de fonctionnement est extrêmement faible en boucle
+            ouverte.
+          </li>
+
+          <li>
+            Par exemple, avec
+            <span class="font-mono">Av₀ = 1.000.000</span>
+            et une alimentation de
+            <span class="font-mono">±15 V</span>,
+            la plage différentielle d'entrée est de l'ordre de
+            <span class="font-mono">30 µV</span>.
+          </li>
+        </ul>
+
+        <img
+          src="./ressources/AOP/AOP_2.png"
+          alt="Courbe de fonctionnement d'un amplificateur opérationnel en boucle ouverte"
+          class="my-6 h-auto w-full max-w-xl rounded-xl shadow-lg"
+        />
+
+        <div class="srounded-xl border-l-4 border-primary bg-gray-50 p-5">
+          <p class="text-base font-semibold leading-relaxed text-gray-800 sm:text-lg">
+            Conclusion : un AOP n'est pas conçu pour fonctionner en boucle
+            ouverte.
+          </p>
+        </div>
+      </div>
+
+      <!-- Les trois zones -->
+      <div class="mt-4 space-y-4">
+        <h3 class="text-2xl font-semibold text-gray-900">
+          Les trois zones de fonctionnement
+        </h3>
+
+        <p class="text-base leading-relaxed text-gray-700 sm:text-lg">
+          Pour un AOP parfait, on distingue trois zones principales de
+          fonctionnement :
+        </p>
+
+        <img
+          src="./ressources/AOP/AOP_3.png"
+          alt="Les trois zones de fonctionnement d'un amplificateur opérationnel"
+          class="my-6 h-auto w-full max-w-xl rounded-xl shadow-lg"
+        />
+      </div>
+
+      <div class="mt-5 mb-4 space-y-4">
+        <h3 class="text-2xl font-semibold text-gray-900">
+          Courants d'entrée
+        </h3>
+
+        <ul class="list-disc space-y-3 pl-6 text-base leading-relaxed text-gray-700 sm:text-lg">
+          <li>
+            En pratique, le courant d'entrée
+            <span class="font-mono">I<sub>S</sub></span>
+            n'est pas strictement nul, mais il reste extrêmement faible et
+            peut être considéré comme négligeable.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Rétroaction -->
+      <div class="space-y-4">
+        <h3 class="text-2xl font-semibold text-gray-900">
+          Rétroaction
+        </h3>
+
+        <ul class="list-disc space-y-3 pl-6 text-base leading-relaxed text-gray-700 sm:text-lg">
+          <li>
+            Pour faire fonctionner l'AOP en régime linéaire, on utilise une
+            boucle de rétroaction négative.
+          </li>
+
+          <li>
+            Il faut également vérifier qu'aucune boucle de rétroaction
+            positive ne vient perturber le fonctionnement du circuit.
+          </li>
+
+          <li>
+            Lorsque l'AOP fonctionne en boucle ouverte ou avec une
+            rétroaction positive, il fonctionne en
+            saturation. Dans ces modes de fonctionnement, on privilégie généralement
+            l'utilisation d'un comparateur plutôt que d'un
+            AOP. Voir la section
+            <strong>« Comparateur à hystérésis»</strong> pour plus de détails.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <section id="suiveur" class="bg-gray-100 px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="mb-10 text-3xl font-bold text-primary sm:text-4xl">
+          Suiveur de tension
+        </h2>
+        <div class="max-w-4xl space-y-6">
+          <img
+            src="./ressources/AOP/AOP_5.png"
+            alt="Schéma d'un amplificateur opérationnel en suiveur de tension"
+            class="h-auto w-full max-w-xl rounded-xl shadow-lg"
+          />
+
+          <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+            <h3 class="mb-4 text-xl font-semibold text-gray-900 sm:text-2xl">
+              Calcul de la tension de sortie
+            </h3>
+           
+            <ol class="list-decimal space-y-3 pl-6 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <li>La contre-réaction négative garantit le fonctionnement linéaire. (V<sup>+</sup> = V<sup>-</sup>)</li>
+              <li>
+                <span class="font-mono">I<sub>m</sub> = 0A</span> et
+                <span class="font-mono">I<sub>p</sub> = 0A</span>.
+              </li>
+              <li>
+                On a <span class="font-mono">V<sup>+</sup> = V<sub>e</sub></span>
+                et <span class="font-mono">V<sup>-</sup> = V<sub>s</sub></span>.
+              </li>
+              <li>
+                Comme <span class="font-mono">V<sup>+</sup> = V<sup>-</sup></span>,
+                on obtient <span class="font-mono">V<sub>s</sub> = V<sub>e</sub></span>.
+              </li>
+          </ol>
+
+            <div class="mt-5 rounded-xl border-l-4 border-primary bg-white p-5 shadow-sm">
+              <p class="font-mono text-base font-semibold leading-relaxed text-gray-900 sm:text-lg">
+                V<sub>s</sub> = V<sub>e</sub>
+              </p>
+            </div>
+          </div>
+
+          <p class="text-base leading-relaxed text-gray-700 sm:text-lg">
+            Le suiveur de tension évite que la résistance de charge
+            <span class="font-mono">R<sub>L</sub></span> ne perturbe l'information
+            produite par le capteur. Avec un simple pont diviseur, la tension
+            du capteur serait fortement atténuée :
+          </p>
+
+          <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+            <p class="font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+              R<sub>L</sub> = 100 &Omega;,
+              R<sub>cap</sub> = 10 k&Omega;,
+              V<sub>cap</sub> = 0,1 V
+            </p>
+            <p class="mt-3 font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+              V<sub>s</sub> = V<sub>cap</sub> &times;
+              <span class="mx-1 inline-flex translate-y-1 flex-col items-stretch align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1 text-center">R<sub>L</sub></span>
+                <span class="px-1 pt-1">R<sub>L</sub> + R<sub>cap</sub></span>
+              </span>
+              = 0,00099 V
+            </p>
+          </div>
+
+          <img
+            src="./ressources/AOP/AOP_6.png"
+            alt="Comparaison entre un suiveur de tension et un pont diviseur"
+            class="h-auto w-full max-w-sm rounded-xl shadow-lg"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section id="inverseur" class="bg-white px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="mb-10 text-3xl font-bold text-primary sm:text-4xl">
+          Amplificateur inverseur
+        </h2>
+        <div class="max-w-4xl space-y-6">
+          <img
+            src="./ressources/AOP/AOP_4.png"
+            alt="Schéma d'un amplificateur opérationnel inverseur"
+            class="h-auto w-full max-w-xl rounded-xl shadow-lg"
+          />
+
+          <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+            <h3 class="mb-4 text-xl font-semibold text-gray-900 sm:text-2xl">
+          Calcul de la tension de sortie
+        </h3>
+           
+            <div class="mb-4 space-y-3 font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+              <p>&epsilon; = 0 &nbsp;&rArr;&nbsp; V<sup>+</sup> = V<sup>-</sup> = 0 V</p>
+              <p>V<sub>s</sub> = R<sub>2</sub> &times; I<sub>2</sub></p>
+              <p>V<sub>e</sub> = R<sub>1</sub> &times; I<sub>1</sub></p>
+              <p>I<sub>1</sub> = -I<sub>2</sub></p>
+              <p class="flex flex-wrap items-center gap-2">
+                <span>Donc</span>
+                <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                  <span class="border-b border-gray-800 px-1 pb-1">V<sub>s</sub></span>
+                  <span class="px-1 pt-1">V<sub>e</sub></span>
+                </span>
+                <span>= -</span>
+                <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                  <span class="border-b border-gray-800 px-1 pb-1">R<sub>2</sub></span>
+                  <span class="px-1 pt-1">R<sub>1</sub></span>
+                </span>
+              </p>
+            </div>
+
+            <div class="rounded-xl border-l-4 border-primary bg-white p-5 shadow-sm">
+              <p class="font-mono text-base font-semibold leading-relaxed text-gray-900 sm:text-lg">
+                <span class="inline-flex items-center gap-2 align-middle">
+                  <span>V<sub>s</sub> = -</span>
+                  <span class="inline-flex flex-col items-stretch text-center leading-none">
+                    <span class="border-b border-gray-800 px-1 pb-1">R<sub>2</sub></span>
+                    <span class="px-1 pt-1">R<sub>1</sub></span>
+                  </span>
+                  <span>&times; V<sub>e</sub></span>
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+            <h3 class="mb-4 text-xl font-semibold text-gray-900 sm:text-2xl">
+              Exemple de dimensionnement
+            </h3>
+            <div class="space-y-3 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <p>On souhaite obtenir un gain de <span class="font-mono">G<sub>0</sub> = 20 dB</span>.</p>
+              <p class="font-mono text-gray-800">
+                G<sub>0</sub> = 20 log<sub>10</sub>&nbsp;(|
+                <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                  <span class="border-b border-gray-800 px-1 pb-1">V<sub>s</sub></span>
+                  <span class="px-1 pt-1">V<sub>e</sub></span>
+                </span>
+                |)<br />
+                V<sub>s</sub> = -10 &times; V<sub>e</sub>
+              </p>
+              <p>
+                Il faut donc
+                <span class="font-mono inline-flex items-center gap-2 align-middle">
+                  <span class="inline-flex flex-col items-stretch text-center leading-none">
+                    <span class="border-b border-gray-800 px-1 pb-1">R<sub>2</sub></span>
+                    <span class="px-1 pt-1">R<sub>1</sub></span>
+                  </span>
+                  <span>= 10</span>
+                </span>.
+                Pour <span class="font-mono">R<sub>1</sub> = 10 k&Omega;</span>,
+                on choisit <span class="font-mono font-semibold">R<sub>2</sub> = 100 k&Omega;</span>.
+              </p>
+            </div>
+          </div>
+
+          <div class="rounded-xl border-l-4 border-primary bg-gray-50 p-5">
+            <h3 class="mb-3 text-xl font-semibold text-gray-900 sm:text-2xl">
+              Observations
+            </h3>
+            <ul class="list-disc space-y-2 pl-6 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <li>Le courant prélevé sur la source n'est pas nul.</li>
+              <li>La résistance de charge <span class="font-mono">R<sub>ch</sub></span> n'a pas d'incidence sur <span class="font-mono">V<sub>s</sub></span>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="non-inverseur" class="bg-gray-100 px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="mb-10 text-3xl font-bold text-primary sm:text-4xl">
+          Amplificateur non inverseur
+        </h2>
+        <div class="max-w-4xl space-y-6">
+          <img
+            src="./ressources/AOP/AOP_7.png"
+            alt="Schéma d'un amplificateur opérationnel non inverseur"
+            class="h-auto w-full max-w-xl rounded-xl shadow-lg"
+          />
+
+          <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+           <h3 class="mb-4 text-xl font-semibold text-gray-900 sm:text-2xl">
+          Calcul de la tension de sortie
+        </h3>
+            <div class="space-y-3 font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+              
+              <p>V = V<sub>R1</sub> = V<sub>e</sub></p>
+              <p>V = V<sub>s</sub> &times;
+                <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                  <span class="border-b border-gray-800 px-1 pb-1">R<sub>1</sub></span>
+                  <span class="px-1 pt-1">R<sub>1</sub> + R<sub>2</sub></span>
+                </span>
+              </p>
+              <p>Donc V<sub>e</sub> = V<sub>s</sub> &times;
+                <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                  <span class="border-b border-gray-800 px-1 pb-1">R<sub>1</sub></span>
+                  <span class="px-1 pt-1">R<sub>1</sub> + R<sub>2</sub></span>
+                </span>
+              </p>
+              <p>V<sub>s</sub> = V<sub>e</sub> &times;
+                <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                  <span class="border-b border-gray-800 px-1 pb-1">R<sub>1</sub> + R<sub>2</sub></span>
+                  <span class="px-1 pt-1">R<sub>1</sub></span>
+                </span>
+                = V<sub>e</sub> &times; (1 +
+                <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                  <span class="border-b border-gray-800 px-1 pb-1">R<sub>2</sub></span>
+                  <span class="px-1 pt-1">R<sub>1</sub></span>
+                </span>)
+              </p>
+              <p class="font-semibold">A<sub>v</sub> = 1 +
+                <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                  <span class="border-b border-gray-800 px-1 pb-1">R<sub>2</sub></span>
+                  <span class="px-1 pt-1">R<sub>1</sub></span>
+                </span>
+              </p>
+            </div>
+
+            <div class="mt-5 rounded-xl border-l-4 border-primary bg-white p-5 shadow-sm">
+              <p class="flex flex-wrap items-center gap-2 font-mono text-base font-semibold leading-relaxed text-gray-900 sm:text-lg">
+                <span>V<sub>s</sub> = V<sub>e</sub> &times; (1 +</span>
+                <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                  <span class="border-b border-gray-800 px-1 pb-1">R<sub>2</sub></span>
+                  <span class="px-1 pt-1">R<sub>1</sub></span>
+                </span>
+                <span>)</span>
+              </p>
+            </div>
+            
+          </div>
+
+          <div class="rounded-xl border-l-4 border-primary bg-gray-50 p-5">
+            <h3 class="mb-3 text-xl font-semibold text-gray-900 sm:text-2xl">Observations</h3>
+            <ul class="list-disc space-y-2 pl-6 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <li>Le courant prélevé par la source d'entrée est presque nul, ce qui est intéressant pour les capteurs fournissant très peu de courant.</li>
+              <li>La résistance de charge <span class="font-mono">R<sub>ch</sub></span> n'a pas d'incidence sur la sortie <span class="font-mono">V<sub>s</sub></span>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="additionneur" class="bg-white px-4 py-16 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="mb-10 text-3xl font-bold text-primary sm:text-4xl">
+          Additionneur
+        </h2>
+        <div class="max-w-4xl space-y-6">
+          <img
+            src="./ressources/AOP/AOP_8.png"
+            alt="Schéma d'un amplificateur opérationnel additionneur"
+            class="h-auto w-full max-w-xl rounded-xl shadow-lg"
+          />
+
+          <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+            <h3 class="mb-4 text-xl font-semibold text-gray-900 sm:text-2xl">
+              Calcul de la tension de sortie
+            </h3>
+            <p class="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+              On étudie chaque branche séparément, puis on additionne les
+              contributions des différentes entrées.
+            </p>
+            <div class="space-y-4 font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+              <p>
+                V<sub>s1</sub> = -
+                <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                  <span class="border-b border-gray-800 px-1 pb-1">R</span>
+                  <span class="px-1 pt-1">R<sub>1</sub></span>
+                </span>
+                (Si on supprime V2)
+                &times; V<sub>1</sub>
+              </p>
+              <p>
+                V<sub>s2</sub> = -
+                <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                  <span class="border-b border-gray-800 px-1 pb-1">R</span>
+                  <span class="px-1 pt-1">R<sub>2</sub></span>
+                </span>
+                &times; V<sub>2</sub>
+                (Si on supprime V1)
+              </p>
+              <p>V<sub>s</sub> = V<sub>s1</sub> + V<sub>s2</sub></p>
+              <p class="font-semibold">
+                V<sub>s</sub> = -R &times;
+                <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                  <span class="border-b border-gray-800 px-1 pb-1">V<sub>1</sub></span>
+                  <span class="px-1 pt-1">R<sub>1</sub></span>
+                </span>
+                - R &times;
+                <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                  <span class="border-b border-gray-800 px-1 pb-1">V<sub>2</sub></span>
+                  <span class="px-1 pt-1">R<sub>2</sub></span>
+                </span>
+              </p>
+            </div>
+
+            <div class="mt-5 rounded-xl border-l-4 border-primary bg-white p-5 shadow-sm">
+              <p class="flex flex-wrap items-center gap-2 font-mono text-base font-semibold leading-relaxed text-gray-900 sm:text-lg">
+                <span>V<sub>s</sub> = -R &times; (</span>
+                <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                  <span class="border-b border-gray-800 px-1 pb-1">V<sub>1</sub></span>
+                  <span class="px-1 pt-1">R<sub>1</sub></span>
+                </span>
+                <span>+</span>
+                <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                  <span class="border-b border-gray-800 px-1 pb-1">V<sub>2</sub></span>
+                  <span class="px-1 pt-1">R<sub>2</sub></span>
+                </span>
+                <span>)</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="rounded-xl border-l-4 border-primary bg-gray-50 p-5">
+            <h3 class="mb-3 text-xl font-semibold text-gray-900 sm:text-2xl">
+              Observations
+            </h3>
+            <ul class="list-disc space-y-2 pl-6 text-base leading-relaxed text-gray-700 sm:text-lg">
+              <li>
+                La sortie est la somme pondérée des entrées, avec des coefficients
+                de pondération négatifs.
+              </li>
+              <li>Les courants prélevés sur les sources ne sont pas nuls.</li>
+              <li>
+                La résistance de charge <span class="font-mono">R<sub>ch</sub></span>
+                n'a pas d'incidence sur <span class="font-mono">V<sub>s</sub></span>.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="soustracteur" class="bg-gray-100 px-4 py-16 md:py-20">
+  <div class="mx-auto max-w-6xl">
+    <h2 class="mb-10 text-3xl font-bold text-primary sm:text-4xl">
+      Soustracteur
+    </h2>
+
+    <div class="max-w-4xl space-y-6">
+      <!-- Schéma -->
+      <img
+        src="./ressources/AOP/AOP_9.png"
+        alt="Schéma d'un amplificateur opérationnel en montage soustracteur"
+        class="h-auto w-full max-w-xl rounded-xl shadow-lg"
+      />
+
+      <!-- Calcul de la tension de sortie -->
+      <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+        <h3 class="mb-4 text-xl font-semibold text-gray-900 sm:text-2xl">
+          Calcul de la tension de sortie
+        </h3>
+
+        <p class="mb-6 text-base leading-relaxed text-gray-700 sm:text-lg">
+          On analyse séparément les deux branches du montage, puis on utilise
+          l'égalité des tensions d'entrée de l'AOP en régime linéaire :
+        </p>
+
+        <!-- Point VA -->
+        <div class="space-y-4">
+          <h4 class="text-lg font-semibold text-gray-900 sm:text-xl">
+            1. Étude du point V<sub>A</sub>
+          </h4>
+
+          <div class="space-y-5 rounded-xl bg-white p-5 font-mono text-base leading-relaxed text-gray-800 shadow-sm sm:text-lg">
+            <div class="flex flex-wrap items-center gap-6">
+              <div class="rounded-lg border border-gray-200 p-4">
+                <p>V<sub>R1</sub> = V<sub>1</sub> - V<sub>A</sub></p>
+                <p>V<sub>R2</sub> = V<sub>s</sub> - V<sub>A</sub></p>
+              </div>
+              <div class="rounded-lg border border-gray-200 p-4">
+                <p>(1) I<sub>1</sub>R<sub>1</sub> = V<sub>1</sub> - V<sub>A</sub></p>
+                <p>(2) I<sub>2</sub>R<sub>2</sub> = V<sub>s</sub> - V<sub>A</sub></p>
+              </div>
+            </div>
+
+            <p>
+              Dans (2), On isole
+              I<sub>2</sub> =
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">V<sub>s</sub> - V<sub>A</sub></span>
+                <span class="px-1 pt-1">R<sub>2</sub></span>
+              </span>
+              et comme I<sub>1</sub> = -I<sub>2</sub>,
+            </p>
+            <p>
+              On peut remplacer I<sub>1</sub> dans (1) :
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">V<sub>A</sub> - V<sub>s</sub></span>
+                <span class="px-1 pt-1">R<sub>2</sub></span>
+              </span>
+              R<sub>1</sub> = V<sub>1</sub> - V<sub>A</sub>
+            </p>
+            <p>&Longleftrightarrow;
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none"><span class="border-b border-gray-800 px-1 pb-1">V<sub>A</sub>R<sub>1</sub></span><span class="px-1 pt-1">R<sub>2</sub></span></span>
+              - <span class="inline-flex flex-col items-stretch text-center align-middle leading-none"><span class="border-b border-gray-800 px-1 pb-1">V<sub>s</sub>R<sub>1</sub></span><span class="px-1 pt-1">R<sub>2</sub></span></span>
+              = V<sub>1</sub> - V<sub>A</sub>
+            </p>
+            <p>&Longleftrightarrow; V<sub>A</sub>R<sub>1</sub> - V<sub>s</sub>R<sub>1</sub> = V<sub>1</sub>R<sub>2</sub> - V<sub>A</sub>R<sub>2</sub></p>
+            <p>&Longleftrightarrow; V<sub>A</sub>R<sub>1</sub> + V<sub>A</sub>R<sub>2</sub> = V<sub>1</sub>R<sub>2</sub> + V<sub>s</sub>R<sub>1</sub></p>
+            <p>&Longleftrightarrow; V<sub>A</sub>(R<sub>1</sub> + R<sub>2</sub>) = V<sub>1</sub>R<sub>2</sub> + V<sub>s</sub>R<sub>1</sub></p>
+          </div>
+
+          <div class="rounded-xl border-l-4 border-primary bg-white p-5 shadow-sm">
+            <p class="font-mono text-base font-semibold text-gray-900 sm:text-lg">
+              V<sub>A</sub> =
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">V<sub>1</sub>R<sub>2</sub> + V<sub>s</sub>R<sub>1</sub></span>
+                <span class="px-1 pt-1">R<sub>1</sub> + R<sub>2</sub></span>
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Point VB -->
+        <div class="mt-8 space-y-4">
+          <h4 class="text-lg font-semibold text-gray-900 sm:text-xl">
+            2. Étude du point V<sub>B</sub>
+          </h4>
+          <div class="rounded-xl border-l-4 border-primary bg-white p-5 shadow-sm">
+            <p class="font-mono text-base font-semibold text-gray-900 sm:text-lg">
+              V<sub>B</sub> = V<sub>2</sub> &times;
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">R<sub>4</sub></span>
+                <span class="px-1 pt-1">R<sub>3</sub> + R<sub>4</sub></span>
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Mise en commun -->
+        <div class="mt-8 space-y-4">
+          <h4 class="text-lg font-semibold text-gray-900 sm:text-xl">
+            3. Mise en commun
+          </h4>
+
+          <div
+            class="rounded-xl bg-white p-5 font-mono text-base leading-relaxed text-gray-800 shadow-sm sm:text-lg"
+          >
+            <p>
+              &Longrightarrow; V<sub>a</sub> = V<sub>b</sub>
+            </p>
+
+            <p class="mt-4">
+              Alors :
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">
+                  V<sub>1</sub>R<sub>2</sub> + V<sub>s</sub>R<sub>1</sub>
+                </span>
+                <span class="px-1 pt-1">R<sub>1</sub> + R<sub>2</sub></span>
+              </span>
+              =
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">R<sub>4</sub>V<sub>2</sub></span>
+                <span class="px-1 pt-1">R<sub>3</sub> + R<sub>4</sub></span>
+              </span>
+            </p>
+
+            <p class="mt-4">
+              V<sub>1</sub>R<sub>2</sub> + V<sub>s</sub>R<sub>1</sub>
+              =
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">
+                  R<sub>4</sub>V<sub>2</sub>(R<sub>1</sub> + R<sub>2</sub>)
+                </span>
+                <span class="px-1 pt-1">R<sub>3</sub> + R<sub>4</sub></span>
+              </span>
+            </p>
+
+            <p class="mt-4">
+              V<sub>s</sub>R<sub>1</sub>
+              =
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">
+                  R<sub>4</sub>V<sub>2</sub>(R<sub>1</sub> + R<sub>2</sub>)
+                </span>
+                <span class="px-1 pt-1">R<sub>3</sub> + R<sub>4</sub></span>
+              </span>
+              - V<sub>1</sub>R<sub>2</sub>
+            </p>
+
+            <p class="mt-4">
+              V<sub>s</sub> = V<sub>2</sub>
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">R<sub>1</sub> + R<sub>2</sub></span>
+                <span class="px-1 pt-1">R<sub>1</sub></span>
+              </span>
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">R<sub>4</sub></span>
+                <span class="px-1 pt-1">R<sub>3</sub> + R<sub>4</sub></span>
+              </span>
+              - V<sub>1</sub>
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">R<sub>2</sub></span>
+                <span class="px-1 pt-1">R<sub>1</sub></span>
+              </span>
+            </p>
+          </div>
+
+          <div class="mt-4 rounded-xl border-l-4 border-primary bg-white p-5 shadow-sm">
+            <p class="mb-3 text-base font-semibold text-gray-900 sm:text-lg">
+              Forme finale de la mise en commun :
+            </p>
+            <p class="flex flex-wrap items-center gap-2 font-mono text-base font-semibold leading-relaxed text-gray-900 sm:text-lg">
+              <span>V<sub>s</sub> = V<sub>2</sub></span>
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">R<sub>1</sub> + R<sub>2</sub></span>
+                <span class="px-1 pt-1">R<sub>1</sub></span>
+              </span>
+              <span>&times;</span>
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">R<sub>4</sub></span>
+                <span class="px-1 pt-1">R<sub>3</sub> + R<sub>4</sub></span>
+              </span>
+              <span>- V<sub>1</sub></span>
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">R<sub>2</sub></span>
+                <span class="px-1 pt-1">R<sub>1</sub></span>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cas particulier -->
+      <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+        <h3 class="mb-4 text-xl font-semibold text-gray-900 sm:text-2xl">
+          Cas particulier : soustracteur classique
+        </h3>
+
+        <p class="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+          Dans le cas particulier où les rapports de résistances sont choisis
+          de manière à obtenir :
+        </p>
+
+        <div
+          class="rounded-xl bg-white p-5 font-mono text-base text-gray-800 shadow-sm sm:text-lg"
+        >
+          <p>
+            <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+              <span class="border-b border-gray-800 px-1 pb-1">
+                R<sub>2</sub>
+              </span>
+              <span class="px-1 pt-1">
+                R<sub>1</sub>
+              </span>
+            </span>
+            =
+            <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+              <span class="border-b border-gray-800 px-1 pb-1">
+                R<sub>4</sub>
+              </span>
+              <span class="px-1 pt-1">
+                R<sub>3</sub>
+              </span>
+            </span>
+          </p>
+        </div>
+
+        <p class="mt-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+          Le montage réalise alors une soustraction pondérée des deux tensions
+          d'entrée.
+        </p>
+      </div>
+
+      <!-- Observations -->
+      <div class="rounded-xl border-l-4 border-primary bg-gray-50 p-5">
+        <h3 class="mb-3 text-xl font-semibold text-gray-900 sm:text-2xl">
+          Observations
+        </h3>
+
+        <ul
+          class="list-disc space-y-2 pl-6 text-base leading-relaxed text-gray-700 sm:text-lg"
+        >
+          <li>
+            La sortie est une
+            <strong>différence pondérée</strong> des deux tensions d'entrée.
+          </li>
+
+          <li>
+            Les courants fournis par les sources ne sont pas nuls : ils
+            circulent dans les résistances d'entrée du montage.
+          </li>
+
+          <li>
+            La résistance de charge
+            <span class="font-mono">R<sub>ch</sub></span>
+            n'a pas d'influence sur la tension de sortie
+            <span class="font-mono">V<sub>s</sub></span>,
+            dans les limites de fonctionnement de l'AOP.
+          </li>
+
+          <li>
+            Le choix des rapports entre les résistances permet de régler le
+            poids de chaque tension d'entrée dans la tension de sortie.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="comparateur-simple" class="bg-white px-4 py-16 md:py-20">
+  <div class="mx-auto max-w-6xl">
+    <h2 class="mb-10 text-3xl font-bold text-primary sm:text-4xl">
+      Comparateur simple
+    </h2>
+
+    <div class="max-w-4xl space-y-10">
+      <div class="space-y-4">
+
+        <img
+            src="./ressources/AOP/AOP_10.png"
+            alt="Schéma d'un amplificateur opérationnel additionneur"
+            class="h-auto w-full max-w-xl rounded-xl shadow-lg"
+          />
+
+        <p class="text-base leading-relaxed text-gray-700 sm:text-lg">
+          L'AOP est en saturation donc la tension différentielle d'entrée est :
+        </p>
+
+        <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+          <p class="font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+            &epsilon; = V<sup>+</sup> &minus; V<sup>&minus;</sup>
+          </p>
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+            <p class="font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+              Si &epsilon; &lt; 0 ça veut dire que V<sup>+</sup> &lt; V<sup>&minus;</sup>
+            </p>
+            <p class="mt-3 font-mono text-base font-semibold leading-relaxed text-gray-900 sm:text-lg">
+              Alors V<sub>s</sub> = V<sub>EE</sub>
+            </p>
+          </div>
+
+          <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+            <p class="font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+              Si &epsilon; &gt; 0 ça veut dire que V<sup>+</sup> &gt; V<sup>&minus;</sup>
+            </p>
+            <p class="mt-3 font-mono text-base font-semibold leading-relaxed text-gray-900 sm:text-lg">
+              Alors V<sub>s</sub> = V<sub>DD</sub>
+            </p>
+          </div>
+        </div>
+
+        <div class="rounded-xl border-l-4 border-primary bg-gray-50 p-5">
+           <p class="font-mono text-base font-semibold leading-relaxed text-gray-900 sm:text-lg">
+            V<sup>+</sup> = V<sub>e</sub> et V<sub>&minus;</sub> = 0V
+          </p>
+          <p class="font-mono text-base font-semibold leading-relaxed text-gray-900 sm:text-lg">
+            Donc si V<sub>e</sub> > 0 <=> V<sub>s</sub> = V<sub>DD</sub>
+          </p>
+          <p class="font-mono text-base font-semibold leading-relaxed text-gray-900 sm:text-lg">
+            Et si V<sub>e</sub> < 0 <=> V<sub>s</sub> = V<sub>EE</sub>
+          </p>
+        </div>
+        <h3 class="mb-4 text-2xl font-semibold text-gray-900">Caractéristique entrée/sortie</h3>
+
+
+        <img
+            src="./ressources/AOP/AOP_11.png"
+            alt="Schéma d'un amplificateur opérationnel additionneur"
+            class="h-auto w-full max-w-sm rounded-xl shadow-lg"
+          />
+          <img
+            src="./ressources/AOP/AOP_12.png"
+            alt="Schéma d'un amplificateur opérationnel additionneur"
+            class="h-auto w-full max-w-sm rounded-xl shadow-lg"
+          />
+      </div>
+
+      <div class="space-y-4">
+        <h3 class="text-2xl font-semibold text-gray-900">Comparateur avec seuil</h3>
+        <img
+            src="./ressources/AOP/AOP_13.png"
+            alt="Schéma d'un amplificateur opérationnel additionneur"
+            class="h-auto w-full max-w-xl rounded-xl shadow-lg"
+          />
+        <p class="text-base leading-relaxed text-gray-700 sm:text-lg">
+          Un pont diviseur fournit la tension de référence :
+        </p>
+
+        <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+          <p class="font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+            V<sub>seuil</sub> =
+            <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+              <span class="border-b border-gray-800 px-1 pb-1">R<sub>2</sub></span>
+              <span class="px-1 pt-1">R<sub>1</sub> + R<sub>2</sub></span>
+            </span>
+            V<sub>DD</sub>
+          </p>
+          <p class="mt-4 font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+            Si R<sub>1</sub> = R<sub>2</sub> : &nbsp; V<sub>seuil</sub> =
+            <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+              <span class="border-b border-gray-800 px-1 pb-1">V<sub>DD</sub></span>
+              <span class="px-1 pt-1">2</span>
+            </span>
+          </p>
+        </div>
+
+        <p class="text-base leading-relaxed text-gray-700 sm:text-lg">
+          La tension d'entrée V<sub>e</sub> est comparée à V<sub>seuil</sub> :
+        </p>
+
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+            <p class="font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+              Si V<sub>e</sub> &gt; V<sub>seuil</sub>
+            </p>
+            <p class="mt-3 font-mono text-base font-semibold leading-relaxed text-gray-900 sm:text-lg">
+              V<sub>s</sub> = V<sub>DD</sub>
+            </p>
+          </div>
+
+          <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+            <p class="font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+              Si V<sub>e</sub> &lt; V<sub>seuil</sub>
+            </p>
+            <p class="mt-3 font-mono text-base font-semibold leading-relaxed text-gray-900 sm:text-lg">
+              V<sub>s</sub> = V<sub>EE</sub>
+            </p>
+          </div>
+        </div>
+        <h3 class="mb-4 text-2xl font-semibold text-gray-900">Caractéristique entrée/sortie</h3>
+
+        <img
+            src="./ressources/AOP/AOP_14.png"
+            alt="Schéma d'un amplificateur opérationnel additionneur"
+            class="h-auto w-full max-w-sm rounded-xl shadow-lg"
+          />
+
+          <img
+            src="./ressources/AOP/AOP_15.png"
+            alt="Schéma d'un amplificateur opérationnel additionneur"
+            class="h-auto w-full max-w-sm rounded-xl shadow-lg"
+          />
+
+
+      </div>
+
+      <div class="rounded-xl border-l-4 border-primary bg-gray-50 p-5">
+        <h3 class="mb-3 text-2xl font-semibold text-gray-900">Remarque</h3>
+        <p class="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+          Un comparateur simple est sensible aux variations et au bruit lorsque
+          V<sub>e</sub> est proche de V<sub>seuil</sub>. Pour éviter plusieurs
+          commutations parasites, on peut utiliser un comparateur à hystérésis.
+        </p>
+        <p class="text-base leading-relaxed text-gray-700 sm:text-lg">
+          Mettre un condensateur sur R<sub>2</sub> permet de filtrer V<sub>seuil</sub> pour qu'il soit stable.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="comparateur-hysteresis" class="bg-gray-100 px-4 py-16 md:py-20">
+  <div class="mx-auto max-w-6xl">
+    <h2 class="mb-10 text-3xl font-bold text-primary sm:text-4xl">
+      Comparateur à hystérésis
+    </h2>
+
+    <div class="max-w-4xl space-y-10">
+      <div class="space-y-4">
+
+        <img
+            src="./ressources/AOP/AOP_16.png"
+            alt="Schéma d'un amplificateur opérationnel additionneur"
+            class="h-auto w-full max-w-xl rounded-xl shadow-lg"
+          />
+
+        <p class="text-base leading-relaxed text-gray-700 sm:text-lg">
+          Le comparateur à hystérésis permet d'éviter les faux déclenchements
+          dus au bruit. L'AOP fonctionne en régime non linéaire donc :
+        </p>
+
+        <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+          <p class="font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+            &epsilon; = V<sup>+</sup> &minus; V<sup>&minus;</sup>
+          </p>
+        </div>
+
+        <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+          <h3 class="mb-4 text-xl font-semibold text-gray-900 sm:text-2xl">
+            Calcul de V<sub>A</sub> pour calculer les seuils de commutation
+          </h3>
+
+          <p class="mb-6 text-base leading-relaxed text-gray-700 sm:text-lg">
+            On cherche la tension V<sub>A</sub> à partir des relations dans les
+            deux branches du montage :
+          </p>
+
+          <div class="space-y-5 rounded-xl bg-white p-5 font-mono text-base leading-relaxed text-gray-800 shadow-sm sm:text-lg">
+            <div class="flex flex-wrap items-center gap-6">
+              <div class="rounded-lg border border-gray-200 p-4">
+                <p>V<sub>R1</sub> = V<sub>A</sub> - V<sub>e</sub></p>
+                <p>V<sub>R2</sub> = V<sub>A</sub> - V<sub>s</sub></p>
+              </div>
+              <div class="rounded-lg border border-gray-200 p-4">
+                <p>(1) I<sub>1</sub>R<sub>1</sub> = V<sub>A</sub> - V<sub>e</sub></p>
+                <p>(2) I<sub>2</sub>R<sub>2</sub> = V<sub>A</sub> - V<sub>s</sub></p>
+              </div>
+            </div>
+
+            <p>
+              Dans (2), on isole I<sub>2</sub> =
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">V<sub>A</sub> - V<sub>s</sub></span>
+                <span class="px-1 pt-1">R<sub>2</sub></span>
+              </span>
+              et comme I<sub>1</sub> = -I<sub>2</sub>, on peut remplacer I<sub>1</sub> dans (1) :
+            </p>
+
+            <p>&Longleftrightarrow;
+              V<sub>A</sub> - V<sub>e</sub> =
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">R<sub>1</sub></span>
+                <span class="px-1 pt-1">R<sub>2</sub></span>
+              </span>
+              (V<sub>s</sub> - V<sub>A</sub>)
+            </p>
+            <p>&Longleftrightarrow; V<sub>A</sub>R<sub>2</sub> - V<sub>e</sub>R<sub>2</sub> = V<sub>s</sub>R<sub>1</sub> - V<sub>A</sub>R<sub>1</sub></p>
+            <p>&Longleftrightarrow; V<sub>A</sub>R<sub>2</sub> + V<sub>A</sub>R<sub>1</sub> = V<sub>s</sub>R<sub>1</sub> + V<sub>e</sub>R<sub>2</sub></p>
+            <p>&Longleftrightarrow; V<sub>A</sub>(R<sub>1</sub> + R<sub>2</sub>) = V<sub>s</sub>R<sub>1</sub> + V<sub>e</sub>R<sub>2</sub></p>
+          </div>
+
+          <div class="mt-5 rounded-xl border-l-4 border-primary bg-white p-5 shadow-sm">
+            <p class="font-mono text-base font-semibold text-gray-900 sm:text-lg">
+              V<sub>A</sub> =
+              <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                <span class="border-b border-gray-800 px-1 pb-1">V<sub>e</sub>R<sub>2</sub> + V<sub>s</sub>R<sub>1</sub></span>
+                <span class="px-1 pt-1">R<sub>1</sub> + R<sub>2</sub></span>
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-6">
+          <h3 class="text-2xl font-semibold text-gray-900">Seuils de commutation</h3>
+
+          <div class="grid gap-6 md:grid-cols-2">
+            <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+              <h4 class="mb-3 text-xl font-semibold text-gray-900">
+                Lorsque <span class="font-mono">&epsilon; &gt; 0</span>
+              </h4>
+              <p class="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+                La sortie sature à
+                <span class="font-mono">V<sub>s</sub> = V<sub>DD</sub> = +V<sub>CC</sub></span>.
+              </p>
+              <p class="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+                Avec &epsilon; = V<sup>+</sup> - V<sup>-</sup> = V<sub>A</sub> - 0 = V<sub>A</sub>, on a :
+              </p>
+              <div class="space-y-3 font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+                <p>
+                  <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                    <span class="border-b border-gray-800 px-1 pb-1">R<sub>2</sub>V<sub>e</sub> + R<sub>1</sub>V<sub>CC</sub></span>
+                    <span class="px-1 pt-1">R<sub>1</sub> + R<sub>2</sub></span>
+                  </span>
+                  &gt; 0
+                </p>
+                <p>&Longleftrightarrow; R<sub>2</sub>V<sub>e</sub> + R<sub>1</sub>V<sub>CC</sub> &gt; 0</p>
+                <p>&Longleftrightarrow; R<sub>2</sub>V<sub>e</sub> &gt; -R<sub>1</sub>V<sub>CC</sub></p>
+                <p>&Longleftrightarrow; V<sub>e</sub> &gt; -
+                  <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                    <span class="border-b border-gray-800 px-1 pb-1">R<sub>1</sub></span>
+                    <span class="px-1 pt-1">R<sub>2</sub></span>
+                  </span>
+                  V<sub>CC</sub>
+                </p>
+              </div>
+              <div class="mt-5 rounded-lg border-l-4 border-primary bg-white p-4 shadow-sm">
+                <p class="font-mono text-base font-semibold text-gray-900 sm:text-lg">
+                  V<sub>e</sub> &gt; -
+                  <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                    <span class="border-b border-gray-800 px-1 pb-1">R<sub>1</sub></span>
+                    <span class="px-1 pt-1">R<sub>2</sub></span>
+                  </span>
+                  V<sub>CC</sub>
+                </p>
+                <p class="font-mono text-base font-semibold text-gray-900 sm:text-lg">
+                  V<sub>e</sub> &gt; - V<sub>seuil</sub>
+                </p>
+              </div>
+            </div>
+
+            <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+              <h4 class="mb-3 text-xl font-semibold text-gray-900">
+                Lorsque <span class="font-mono">&epsilon; &lt; 0</span>
+              </h4>
+              <p class="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+                La sortie sature à
+                <span class="font-mono">V<sub>s</sub> = V<sub>EE</sub> = -V<sub>CC</sub></span>.
+              </p>
+              <p class="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+                Avec &epsilon; = V<sup>+</sup> - V<sup>-</sup> = V<sub>A</sub> - 0 = V<sub>A</sub>, on a :
+              </p>
+              <div class="space-y-3 font-mono text-base leading-relaxed text-gray-800 sm:text-lg">
+                <p>
+                  <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                    <span class="border-b border-gray-800 px-1 pb-1">R<sub>2</sub>V<sub>e</sub> - R<sub>1</sub>V<sub>CC</sub></span>
+                    <span class="px-1 pt-1">R<sub>1</sub> + R<sub>2</sub></span>
+                  </span>
+                  &lt; 0
+                </p>
+                <p>&Longleftrightarrow; R<sub>2</sub>V<sub>e</sub> - R<sub>1</sub>V<sub>CC</sub> &lt; 0</p>
+                <p>&Longleftrightarrow; R<sub>2</sub>V<sub>e</sub> &lt; R<sub>1</sub>V<sub>CC</sub></p>
+                <p>&Longleftrightarrow; V<sub>e</sub> &lt;
+                  <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                    <span class="border-b border-gray-800 px-1 pb-1">R<sub>1</sub></span>
+                    <span class="px-1 pt-1">R<sub>2</sub></span>
+                  </span>
+                  V<sub>CC</sub>
+                </p>
+              </div>
+              <div class="mt-5 rounded-lg border-l-4 border-primary bg-white p-4 shadow-sm">
+                <p  class="font-mono text-base font-semibold text-gray-900 sm:text-lg">
+                   V<sub>e</sub> &lt;
+                  <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                    <span class="border-b border-gray-800 px-1 pb-1">R<sub>1</sub></span>
+                    <span class="px-1 pt-1">R<sub>2</sub></span>
+                  </span>
+                  V<sub>CC</sub>
+                </p>
+                <p class="font-mono text-base font-semibold text-gray-900 sm:text-lg">
+                  V<sub>e</sub> &lt; V<sub>seuil</sub>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="mb-4 text-2xl font-semibold text-gray-900">Caractéristique entrée/sortie</h3>
+            <div class="rounded-xl border-l-4 border-primary bg-gray-50 p-5">
+              <div class="grid gap-4 md:grid-cols-2">
+                <p class="font-mono text-base font-semibold leading-relaxed text-gray-900 sm:text-lg">
+                  V<sub>s</sub> = +V<sub>CC</sub>
+                  <span class="block font-normal">si V<sub>e</sub> &gt; -V<sub>seuil</sub></span>
+                </p>
+                <p class="font-mono text-base font-semibold leading-relaxed text-gray-900 sm:text-lg">
+                  V<sub>s</sub> = -V<sub>CC</sub>
+                  <span class="block font-normal">si V<sub>e</sub> &lt; +V<sub>seuil</sub></span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <img
+            src="./ressources/AOP/AOP_17.png"
+            alt="Schéma d'un amplificateur opérationnel additionneur"
+            class="h-auto w-full max-w-sm rounded-xl shadow-lg"
+          />
+
+        <div class="rounded-xl border-l-4 border-primary bg-gray-50 p-5">
+          <h3 class="mb-3 text-2xl font-semibold text-gray-900">
+            Pourquoi utiliser un comparateur dédié plutôt qu'un AOP ?
+          </h3>
+          <p class="mb-4 text-base leading-relaxed text-gray-700 sm:text-lg">
+            Un AOP classique peut présenter plusieurs limites lorsqu'il est
+            utilisé en régime non linéaire :
+          </p>
+          <ol class="list-decimal space-y-2 pl-6 text-base leading-relaxed text-gray-700 sm:text-lg">
+            <li>Une saturation lente lors du passage d'un état à l'autre.</li>
+            <li>Un temps de récupération important après saturation.</li>
+            <li>Un comportement moins prévisible hors régime linéaire.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="photodiode" class="bg-white px-4 py-16 md:py-20">
+  <div class="mx-auto max-w-6xl">
+    <h2 class="mb-10 text-3xl font-bold text-primary sm:text-4xl">
+      Conversion Courant-Tension (Photodiode)
+    </h2>
+    <div class="max-w-4xl space-y-8">
+      <img
+        src="./ressources/AOP/AOP_18.png"
+        alt="Montage convertisseur courant-tension avec une photodiode"
+        class="h-auto w-full max-w-xl rounded-xl shadow-lg"
+      />
+
+      <p class="text-base leading-relaxed text-gray-700 sm:text-lg">
+        Ce montage convertit le courant produit par la photodiode en une
+        tension de sortie.
+      </p>
+
+      <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+        <ul class="list-disc space-y-2 pl-6 text-base leading-relaxed text-gray-700 sm:text-lg">
+          <li>L'AOP fonctionne en régime linéaire donc les tensions d'entrée sont égales : <span class="font-mono">V<sup>-</sup> = V<sup>+</sup> = 0 V</span>.</li>
+          <li>Le courant d'entrée de l'AOP est nul.</li>
+        </ul>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+        <h3 class="mb-4 text-2xl font-semibold text-gray-900">
+          Calcul de la tension de sortie
+        </h3>
+
+        <div class="space-y-5 rounded-xl bg-white p-5 font-mono text-base leading-relaxed text-gray-800 shadow-sm sm:text-lg">
+          <div class="flex flex-wrap items-center gap-6">
+            <div class="rounded-lg border border-gray-200 p-4">
+              <p>V<sub>R</sub> = V<sub>s</sub> - V<sup>-</sup></p>
+              <p>V<sup>-</sup> = 0 V</p>
+            </div>
+            <div class="rounded-lg border border-gray-200 p-4">
+              <p>I<sub>d</sub> = I<sub>R</sub></p>
+              <p>I<sub>R</sub> =
+                <span class="inline-flex flex-col items-stretch text-center align-middle leading-none">
+                  <span class="border-b border-gray-800 px-1 pb-1">V<sub>R</sub></span>
+                  <span class="px-1 pt-1">R</span>
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <p>&Longleftrightarrow; V<sub>R</sub> = V<sub>s</sub></p>
+          <p>&Longleftrightarrow; V<sub>s</sub> = R.I<sub>R</sub></p>
+          <p>&Longleftrightarrow; V<sub>s</sub> = R.I<sub>d</sub></p>
+        </div>
+
+        <div class="mt-5 rounded-xl border-l-4 border-primary bg-white p-5 shadow-sm">
+          <p class="font-mono text-base font-semibold leading-relaxed text-gray-900 sm:text-lg">
+            V<sub>s</sub> = R.I<sub>d</sub>
+          </p>
+          <p class="mt-2 text-base leading-relaxed text-gray-700 sm:text-lg">
+            La tension de sortie est donc proportionnelle au courant généré par
+            la photodiode, avec un facteur de conversion égal à la résistance
+            de rétroaction <span class="font-mono">R</span>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  </main>
+
+  <footer class="border-t bg-white px-4 py-10 text-center">
+    <p class="font-semibold text-primary">Electro-note</p>
+    <p class="mt-2 text-sm text-gray-500">Carnet de projets électroniques</p>
+  </footer>
+
+  <script>
+    const sections = [...document.querySelectorAll('main section[id]')];
+    const topicLinks = [...document.querySelectorAll('.topic-link')];
+    const progressBars = [document.querySelector('#reading-progress'), document.querySelector('#mobile-reading-progress')];
+    const progressLabels = [document.querySelector('#reading-progress-label'), document.querySelector('#mobile-reading-progress-label')];
+
+    function updateReadingProgress() {
+      const pageHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = pageHeight > 0 ? Math.min(100, Math.round((window.scrollY / pageHeight) * 100)) : 0;
+
+      progressBars.forEach((bar) => {
+        if (bar) bar.style.width = `${progress}%`;
+      });
+      progressLabels.forEach((label) => {
+        if (label) label.textContent = progress;
+      });
+    }
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        topicLinks.forEach((link) => link.classList.toggle('active', link.dataset.section === entry.target.id));
+      });
+    }, { rootMargin: '-20% 0px -65% 0px' });
+
+    sections.forEach((section) => sectionObserver.observe(section));
+    window.addEventListener('scroll', updateReadingProgress, { passive: true });
+    updateReadingProgress();
+  </script>
+</body>
+</html>
